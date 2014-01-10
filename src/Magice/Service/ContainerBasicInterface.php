@@ -21,6 +21,12 @@ namespace Magice\Service {
         const SCOPE_NEW     = ContainerInterface::SCOPE_PROTOTYPE;
         const SCOPE_REQUEST = 'request';
 
+        /**
+         * @param string $id
+         * @param int    $behavior
+         *
+         * @return mixed
+         */
         public function get($id, $behavior = self::INVALID_REFERENCE_EXCEPTION);
 
         public function set($id, $service, $scope = self::SCOPE_SHARED);
