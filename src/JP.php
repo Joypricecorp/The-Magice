@@ -1,9 +1,7 @@
 <?php
 namespace {
     class JP
-    {
-
-    }
+    {}
 
     function cd()
     {
