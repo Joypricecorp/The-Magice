@@ -1,5 +1,7 @@
 <?php
 /*
+ * This file is part of the The Magice Project.
+ *
  * @copyright   2012-2014 ツ Joyprice corporation Ltd.
  * @license     http://www.joyprice.org/license
  * @link        http://www.joyprice.org/themagice
