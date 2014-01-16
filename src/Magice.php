@@ -3,9 +3,6 @@
  * @copyright   2012-2014 ツ Joyprice corporation Ltd.
  * @license     http://www.joyprice.org/license
  * @link        http://www.joyprice.org/themagice
- * @author      ツ Liverbool <liverbool@joyprice.com>
- * @version     1.0
- * @since       1.0
  */
 
 namespace {
@@ -13,6 +10,13 @@ namespace {
     use Magice\Service\Builder,
         Magice\Service\Container;
 
+    /**
+     * The Magice Singleton Base
+     * 
+     * @author      ツ Liverbool <liverbool@joyprice.com>
+     * @version     1.0
+     * @since       1.0
+     */
     class Magice
     {
         /**
@@ -155,28 +159,6 @@ namespace {
         {
             return static::$container->get($id);
         }
-
-        public static function autoload()
-        {
-            // todo
-        }
-
-        public static function events()
-        {
-        }
-
-        public static function listeners()
-        {
-        }
-
-        public static function subscribers()
-        {
-        }
-
-        public static function dispatcher()
-        {
-
-        }
     }
 
     /**
@@ -196,6 +178,7 @@ namespace {
         return mg::dig($id);
     }
     
+    // TODO: move to single file
     if(!function_exists('cd')){
         function cd()
         {
