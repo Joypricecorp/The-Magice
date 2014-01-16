@@ -1,7 +1,7 @@
 <?php
 namespace Magice\Exception {
 
-    use Magice\Serviced\Param;
+    //use Magice\Serviced\Param;
 
     class Exception extends \Exception
     {
@@ -9,7 +9,7 @@ namespace Magice\Exception {
 
         public function __construct($message, $code = 0)
         {
-            $debug       = Param::get('kernel.debug');
+            $debug       = true;//Param::get('kernel.debug');
             $messageCode = null;
 
             if (is_array($message)) {

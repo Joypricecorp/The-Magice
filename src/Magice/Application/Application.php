@@ -44,11 +44,26 @@ namespace Magice\Application {
                     'kernel.bundles'         => $bundles,
                     'kernel.charset'         => $this->getCharset(),
                     'kernel.container_class' => $this->getContainerClass(),
-                    // add SRC @note this not stable but useful if you not change src folder
-                    'kernel.src'             => str_replace($this->name, 'src', $this->rootDir)
+                    // BOON ADD @note this not stable but useful if you not change src folder
+                    'kernel.src'             => str_replace($this->name, 'src', $this->rootDir),
+                    'kernel.suffix'          => $this->getEnvSuffix()
                 ),
                 $this->getEnvParameters()
             );
+        }
+
+        public function getEnvSuffix()
+        {
+            switch (strtolower($this->environment)) {
+                case 'dev':
+                    return '-dev';
+
+                case 'test':
+                    return '-test';
+                
+                default:
+                    return '';
+            }
         }
 
         /**

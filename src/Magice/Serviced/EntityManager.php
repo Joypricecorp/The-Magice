@@ -65,7 +65,7 @@ namespace Magice\Serviced {
      * The class name must be the fully-qualified class name without a leading backslash
      * (as it is returned by get_class($obj)).
      * -param string      $className
-     * @method static \Doctrine\ORM\Mapping\ClassMetadata  getClassMetadata($className);
+     * @method static \Doctrine\ORM\Mapping\ClassMetadata getClassMetadata($className);
      * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      * Gets the metadata factory used to gather the metadata of classes.
      * @method static \Doctrine\Common\Persistence\Mapping\ClassMetadataFactory getMetadataFactory();
