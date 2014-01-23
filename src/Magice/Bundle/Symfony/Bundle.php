@@ -42,6 +42,7 @@ namespace Magice\Bundle\Symfony {
             $builder->addCompilerPass(new Compilers\Template());
             $builder->addCompilerPass(new Compilers\Twig());
             $builder->addCompilerPass(new Compilers\Session());
+            $builder->addCompilerPass(new Compilers\Security());
             // Not Now! We cannot inject service container to Enitity
             //$builder->addCompilerPass(new Compilers\Doctrine());
 

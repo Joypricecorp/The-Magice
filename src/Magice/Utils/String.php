@@ -38,7 +38,25 @@ namespace Magice\Utils {
 
         public static function dotToCamelize($id, $separate = '\\')
         {
-            return strtr(ucwords(strtr($id, array('_' => ' ', '.' => $separate.' ', '-' => ' '))), array(' ' => ''));
+            return strtr(ucwords(strtr($id, array('_' => ' ', '.' => $separate . ' ', '-' => ' '))), array(' ' => ''));
+        }
+
+        public static function isJson($string)
+        {
+            if (!is_string($string)) {
+                return false;
+            }
+
+            try {
+                // try to decode string
+                json_decode($string);
+            } catch (\ErrorException $e) {
+                // exception has been caught which means argument wasn't a string and thus is definitely no json.
+                return false;
+            }
+
+            // check if error occured
+            return (json_last_error() == JSON_ERROR_NONE);
         }
     }
 }

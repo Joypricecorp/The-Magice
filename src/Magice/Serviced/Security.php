@@ -21,7 +21,7 @@ namespace Magice\Serviced {
 
         public static function granted($attributes, $object = null)
         {
-            return static::instance()->isGranted($attributes, $object);
+            return static::getServiceInstance()->isGranted($attributes, $object);
         }
 
         /**
@@ -29,7 +29,7 @@ namespace Magice\Serviced {
          */
         public static function token()
         {
-            return static::instance()->getToken();
+            return static::getServiceInstance()->getToken();
         }
 
         /**

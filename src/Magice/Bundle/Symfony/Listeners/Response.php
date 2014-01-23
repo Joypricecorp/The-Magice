@@ -8,7 +8,6 @@ namespace Magice\Bundle\Symfony\Listeners {
     use Symfony\Component\HttpKernel\HttpKernelInterface;
 
     /**
-     * Class Response
      * @copyright   2012-2014 ツ Joyprice corporation Ltd.
      * @license     http://www.joyprice.org/license
      * @link        http://www.joyprice.org/themagice
