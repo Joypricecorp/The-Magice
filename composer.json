@@ -1,0 +1,26 @@
+{
+    "name": "magice/the-magice",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Beautiful of Symfony",
+    "homepage": "https://github.com/Joypricecorp/The-Magice.git",
+    "authors": [
+        {
+            "name": "ツ Liverbool",
+            "email": "nukboon@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5"
+    },
+    "autoload": {
+        "psr-0": {
+            "Magice": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "master-0.2"
+        }
+    }
+}
