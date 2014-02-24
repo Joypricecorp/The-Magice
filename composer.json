@@ -10,6 +10,7 @@
             "email": "nukboon@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.5"
     },
@@ -20,7 +21,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "master-0.2"
+            "dev-master": "0.2"
         }
     }
 }
