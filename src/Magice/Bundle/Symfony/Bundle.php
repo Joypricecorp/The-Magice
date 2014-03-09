@@ -38,14 +38,18 @@ namespace Magice\Bundle\Symfony {
             // setup builder on build time
             Magice::build($builder);
 
-            $builder->registerExtension(new Extension());            
+            $builder->addCompilerPass(new Compilers\TemplateGuesser());
             $builder->addCompilerPass(new Compilers\Template());
             $builder->addCompilerPass(new Compilers\Twig());
             $builder->addCompilerPass(new Compilers\Session());
             $builder->addCompilerPass(new Compilers\Security());
-            // Not Now! We cannot inject service container to Enitity
-            //$builder->addCompilerPass(new Compilers\Doctrine());
+            $builder->addCompilerPass(new Compilers\Doctrine());
 
+        }
+
+        public function getContainerExtension()
+        {
+            return new Extension();
         }
     }
 }

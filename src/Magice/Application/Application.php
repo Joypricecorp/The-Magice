@@ -70,17 +70,17 @@ namespace Magice\Application {
          * Get configuration file path
          * @return string
          */
-        public function getConfigFile()
+        /*public function getConfigFile()
         {
             return $this->rootDir . '/config/config_' . $this->environment . '.yml';
-        }
+        }*/
 
         /**
          * Returns an array of bundles to registers.
          * @return array|\Symfony\Component\HttpKernel\Bundle\BundleInterface[]
          * @api
          */
-        public function registerBundles()
+        /*public function registerBundles()
         {
             $config = new ConfiguratorYaml($this);
             $config->load($this->getConfigFile());
@@ -90,7 +90,7 @@ namespace Magice\Application {
             // add Magice Bundle
             array_unshift($bundles, new Bundle());
             return $bundles;
-        }
+        }*/
 
         /**
          * Loads the container configuration
@@ -99,10 +99,10 @@ namespace Magice\Application {
          *
          * @api
          */
-        public function registerContainerConfiguration(LoaderInterface $loader)
+        /*public function registerContainerConfiguration(LoaderInterface $loader)
         {
             $loader->load($this->getConfigFile());
-        }
+        }*/
 
         /**
          * Gets a new Builder instance used to build the service container.
@@ -128,7 +128,7 @@ namespace Magice\Application {
          * @return DelegatingLoader
          * @see https://github.com/symfony/symfony/issues/9138
          */
-        protected function getContainerLoader(ContainerInterface $container)
+        /*protected function getContainerLoader(ContainerInterface $container)
         {
             $locator  = new FileLocator($this);
             $resolver = new LoaderResolver(array(
@@ -140,7 +140,7 @@ namespace Magice\Application {
             ));
 
             return new DelegatingLoader($resolver);
-        }
+        }*/
 
         //abstract public function bundles();
     }

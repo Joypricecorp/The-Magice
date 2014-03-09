@@ -14,7 +14,7 @@ namespace Magice\Bundle\Symfony\Services {
      */
     class TemplateReference extends BaseTemplateReference
     {
-        public function __construct($bundle = null, $controller = null, $name = null, $format = null, $engine = null, $scoped = null)
+        public function __construct($bundle = null, $controller = null, $name = null, $format = null, $engine = null, $scoped = null, $formats = array())
         {
             $this->parameters = array(
                 'bundle'     => $bundle,
@@ -22,7 +22,8 @@ namespace Magice\Bundle\Symfony\Services {
                 'name'       => $name,
                 'format'     => $format,
                 'engine'     => $engine,
-                'scoped'     => $scoped
+                'scoped'     => $scoped,
+                'formats'    => $formats
             );
         }
     }

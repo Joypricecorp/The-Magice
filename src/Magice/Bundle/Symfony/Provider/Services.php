@@ -23,13 +23,13 @@ namespace Magice\Bundle\Symfony\Provider {
          * class: Magice\Session\Handler\PdoService
          *      arguments: Auto set by Magice\Service\ContainerAwareInterface
          */
-        public static function SessionPdoService(Builder $builder)
+        /*public static function SessionPdoService(Builder $builder)
         {
             $builder->register(
                 'magice.service.session.pdoservice',
                 'Magice\Session\Handler\PdoService'
             );
-        }
+        }*/
 
         /**
          * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -42,13 +42,13 @@ namespace Magice\Bundle\Symfony\Provider {
          *          class       : Magice\Session\Handler\Pdo
          *          arguments   : ["@magice.service.session.pdoservice", "%magice.session.table%"]
          */
-        public static function SessionHandlerPdo(Builder $builder)
+        /*public static function SessionHandlerPdo(Builder $builder)
         {
             $builder
                 ->register('magice.service.session.handler.pdo', 'Magice\Session\Handler\Pdo')
                 ->addArgument(new Reference('magice.service.session.pdoservice'))
                 ->addArgument('%magice.session.table%');
-        }
+        }*/
 
         /**
          * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

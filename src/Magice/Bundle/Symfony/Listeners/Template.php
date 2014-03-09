@@ -39,20 +39,26 @@ namespace Magice\Bundle\Symfony\Listeners {
                 return;
             }
 
-            $format = $request->query->get('_format', $configuration->getFormat());
+            $formatDefault = $configuration instanceof TemplateReference ? $configuration->getFormat() : null;
+            $format        = $request->query->get('_format', $formatDefault);
+            $scoped = $formatDefault = $configuration instanceof TemplateReference ? $configuration->getScoped() : null;
+            $formats = $formatDefault = $configuration instanceof TemplateReference ? $configuration->getFormats() : null;
+
             // Ensure output format & _format is currect
             $request->setRequestFormat($format);
             $request->query->set('_format', $format);
 
             if (!$configuration->getTemplate()) {
                 $guesser = $this->container->get('sensio_framework_extra.view.guesser');
-                $configuration->setTemplate($guesser->guessTemplateName(
-                    $controller,
-                    $format,
-                    $configuration->getEngine(),
-                    $configuration->getScoped(),
-                    $configuration->getFormats()
-                ));
+                $configuration->setTemplate(
+                    $guesser->guessTemplateName(
+                        $controller,
+                        $format,
+                        $configuration->getEngine(),
+                        $scoped,
+                        $formats
+                    )
+                );
             }
 
             $request->attributes->set('_template', $configuration->getTemplate());
@@ -113,7 +119,8 @@ namespace Magice\Bundle\Symfony\Listeners {
                 if (!empty($formats) && !in_array($format, $formats)) {
                     throw new \RuntimeException(sprintf(
                         'Not support output format ("%s"). Output formats are supported: [%s].',
-                        $format, implode(',', $formats)
+                        $format,
+                        implode(',', $formats)
                     ));
                 }
             } else {
@@ -130,11 +137,13 @@ namespace Magice\Bundle\Symfony\Listeners {
 
                 case 'jsonp':
                     $response = new JsonResponse($parameters);
-                    $response->setCallback($this->container->getParameter(
-                        $request->query->has('_cdata')
-                            ? 'magice.output.cdata_callback'
-                            : 'magice.output.jsonp_callback'
-                    ));
+                    $response->setCallback(
+                        $this->container->getParameter(
+                            $request->query->has('_cdata')
+                                ? 'magice.output.cdata_callback'
+                                : 'magice.output.jsonp_callback'
+                        )
+                    );
 
                     $event->setResponse($response);
 

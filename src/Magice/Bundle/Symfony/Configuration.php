@@ -57,6 +57,7 @@ namespace Magice\Bundle\Symfony {
                     ->end()
                     ->arrayNode('output')
                         ->info('Output configuration')
+                        ->canBeEnabled()
                         ->children()
                             ->scalarNode('layout')->defaultValue('@JP/Layout/Default/index.twig')->end()
                             ->scalarNode('jsonp_callback')->defaultValue('jsonp_callback')->end()

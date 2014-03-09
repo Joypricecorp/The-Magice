@@ -18,6 +18,13 @@ namespace Magice\Bundle\Symfony\Compilers {
     {
         public function process(ContainerBuilder $builder)
         {
+            $builder->setParameter('doctrine.orm.entity_manager.class', 'Magice\Orm\Manager');
+            $builder->getDefinition('doctrine.orm.entity_manager.abstract')
+                ->setClass('Magice\Orm\Manager')
+                ->setFactoryClass('Magice\Orm\Manager')
+            ;
+
+            /*
             //$entity_manager = $builder->findDefinition('doctrine.orm.entity_manager');
             $em_name   = $builder->get('doctrine')->getDefaultManagerName();
             $em_config = $builder->getDefinition(sprintf('doctrine.orm.%s_configuration', $em_name));
@@ -32,6 +39,7 @@ namespace Magice\Bundle\Symfony\Compilers {
             $repo_factory->setPublic(false);
 
             $em_config->addMethodCall('setRepositoryFactory', array($repo_factory));
+            */
         }
     }
 }

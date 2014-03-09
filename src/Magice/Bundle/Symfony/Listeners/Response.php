@@ -49,7 +49,7 @@ namespace Magice\Bundle\Symfony\Listeners {
 
             // TODO: check support _controller class inteadof use JP
             if (strpos($event->getRequest()->attributes->get('_controller'), 'JP') === 0
-                && empty($event->getRequest()->attributes->get('_modular'))
+                && !($event->getRequest()->attributes->get('_modular'))
                 && $event->getRequestType() == HttpKernelInterface::MASTER_REQUEST
             ) {
                 $view->prepareResponse($event->getResponse(), $event->getRequest()->getRequestFormat());
