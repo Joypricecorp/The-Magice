@@ -33,7 +33,7 @@ namespace Magice\Orm {
          */
         protected $logger;
 
-        protected $loggerChalnel = 'logger';
+        protected $loggerChannel = 'logger';
 
         /**
          * Initializes a new <tt>EntityRepository</tt>.
@@ -48,7 +48,7 @@ namespace Magice\Orm {
             $this->_em         = $em;
             $this->_class      = $class;
             $this->_container  = $cn;
-            $this->logger = $cn->get($this->loggerChalnel);
+            $this->logger = $cn->get($this->loggerChannel);
         }
     }
 }
