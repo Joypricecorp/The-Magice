@@ -6,6 +6,8 @@ namespace Magice\Bundle\Symfony\Compilers {
         Symfony\Component\DependencyInjection\ContainerBuilder,
         Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
+    use Doctrine\Bundle\DoctrineBundle\Registry;
+
     /**
      * @copyright   2012-2014 ツ Joyprice corporation Ltd.
      * @license     http://www.joyprice.org/license
@@ -18,20 +20,25 @@ namespace Magice\Bundle\Symfony\Compilers {
     {
         public function process(ContainerBuilder $builder)
         {
-            //$entity_manager = $builder->findDefinition('doctrine.orm.entity_manager');
-            $em_name   = $builder->get('doctrine')->getDefaultManagerName();
-            $em_config = $builder->getDefinition(sprintf('doctrine.orm.%s_configuration', $em_name));
+            /**
+             * @var Registry $dc
+             */
+            $dc    = $builder->get('doctrine');
+            $names = $dc->getManagerNames();
+            foreach ($names as $name => $id) {
+                $config = $builder->getDefinition(sprintf('doctrine.orm.%s_configuration', $name));
 
-            // replace setRepositoryFactory
-            if ($em_config->hasMethodCall('setRepositoryFactory')) {
-                $em_config->removeMethodCall('setRepositoryFactory');
+                // replace setRepositoryFactory
+                if ($config->hasMethodCall('setRepositoryFactory')) {
+                    $config->removeMethodCall('setRepositoryFactory');
+                }
+
+                $factory = new Definition('Magice\Orm\RepositoryFactory');
+                $factory->addMethodCall('setContainer', array(new Reference('service_container')));
+                $factory->setPublic(false);
+
+                $config->addMethodCall('setRepositoryFactory', array($factory));
             }
-
-            $repo_factory = new Definition('Magice\Orm\RepositoryFactory');
-            $repo_factory->addMethodCall('setContainer', array(new Reference('service_container')));
-            $repo_factory->setPublic(false);
-
-            $em_config->addMethodCall('setRepositoryFactory', array($repo_factory));
         }
     }
 }
