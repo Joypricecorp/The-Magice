@@ -4,6 +4,7 @@ namespace Magice\Orm {
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\Mapping\ClassMetadata;
     use Symfony\Component\DependencyInjection\ContainerInterface;
+    use Psr\Log\LoggerInterface;
 
     class Repository extends EntityRepository
     {
@@ -27,7 +28,10 @@ namespace Magice\Orm {
          */
         protected $_container;
 
-        protected $profile;
+        /**
+         * @var LoggerInterface
+         */
+        protected $logger;
 
         /**
          * Initializes a new <tt>EntityRepository</tt>.
@@ -42,6 +46,7 @@ namespace Magice\Orm {
             $this->_em         = $em;
             $this->_class      = $class;
             $this->_container  = $cn;
+            $this->logger = $cn->get('logger');
         }
     }
 }
