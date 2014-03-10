@@ -1,11 +1,10 @@
 <?php
-namespace Magice\Orm\Doctrine\Query {
+namespace Magice\Orm\Query {
 
     use Doctrine\ORM\AbstractQuery;
     use Doctrine\ORM\QueryBuilder as OrmQueryBuilder;
     use Doctrine\DBAL\Query\QueryBuilder as DbalQueryBuilder;
     use Doctrine\ORM\Tools\Pagination\Paginator;
-    use Magice\Orm\Query\ResultInterface;
 
     class Result implements ResultInterface
     {
