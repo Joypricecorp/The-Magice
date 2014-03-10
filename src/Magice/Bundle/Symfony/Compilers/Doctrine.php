@@ -27,8 +27,8 @@ namespace Magice\Bundle\Symfony\Compilers {
                 $em_config->removeMethodCall('setRepositoryFactory');
             }
 
-            $repo_factory = new Definition('Magice\Orm\Doctrine\meta\common\RepositoryFactory');
-            $repo_factory->addMethodCall('setContainer', array(new Reference('magice.service.container')));
+            $repo_factory = new Definition('Magice\Orm\RepositoryFactory');
+            $repo_factory->addMethodCall('setContainer', array(new Reference('service_container')));
             $repo_factory->setPublic(false);
 
             $em_config->addMethodCall('setRepositoryFactory', array($repo_factory));
