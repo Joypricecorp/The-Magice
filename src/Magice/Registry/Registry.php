@@ -24,7 +24,6 @@ namespace Magice\Registry {
 
         /**
          * Number of elements in configuration data.
-         *
          * @var int
          */
 
@@ -32,7 +31,6 @@ namespace Magice\Registry {
         /**
          * Used when unsetting values during iteration to ensure we do not skip
          * the next element.
-         *
          * @var bool
          */
         protected $skipNextIteration;
@@ -57,8 +55,8 @@ namespace Magice\Registry {
          */
         public function clear()
         {
-            $this->parameters = array();
-            $this->count = null;
+            $this->parameters        = array();
+            $this->count             = null;
             $this->skipNextIteration = true;
         }
 
@@ -336,10 +334,10 @@ namespace Magice\Registry {
          */
         public function def($path, $value)
         {
-            $data = $this->parameters;
+            $data =& $this->parameters;
 
             // if key exist with . (dot)
-            if (isset($data[$path])) {
+            if (isset($data[$path]) || !preg_match('/\./', $path)) {
                 $this->set($path, $value);
                 return;
             }
@@ -367,9 +365,9 @@ namespace Magice\Registry {
 
                 // Get the old value if exists so we can return it
                 $node[$nodes[$i]] = $value;
+            } else {
+                $this->set($path, $value);
             }
-
-            $this->set($path, $value);
         }
 
         private function _get($path)
@@ -411,7 +409,6 @@ namespace Magice\Registry {
 
         /**
          * count(): defined by Countable interface.
-         *
          * @see    Countable::count()
          * @return int
          */
@@ -422,7 +419,6 @@ namespace Magice\Registry {
 
         /**
          * current(): defined by Iterator interface.
-         *
          * @see    Iterator::current()
          * @return mixed
          */
@@ -434,7 +430,6 @@ namespace Magice\Registry {
 
         /**
          * key(): defined by Iterator interface.
-         *
          * @see    Iterator::key()
          * @return mixed
          */
@@ -445,7 +440,6 @@ namespace Magice\Registry {
 
         /**
          * next(): defined by Iterator interface.
-         *
          * @see    Iterator::next()
          * @return void
          */
@@ -461,7 +455,6 @@ namespace Magice\Registry {
 
         /**
          * rewind(): defined by Iterator interface.
-         *
          * @see    Iterator::rewind()
          * @return void
          */
@@ -473,7 +466,6 @@ namespace Magice\Registry {
 
         /**
          * valid(): defined by Iterator interface.
-         *
          * @see    Iterator::valid()
          * @return bool
          */
