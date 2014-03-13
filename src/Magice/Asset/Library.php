@@ -1,5 +1,5 @@
 <?php
-namespace Magice\Mvc\View\Asset {
+namespace Magice\Asset {
 
     /**
      * Class Library

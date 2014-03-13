@@ -1,5 +1,6 @@
 <?php
-namespace Magice\Mvc\View\Asset {
+namespace Magice\Asset {
+
     use Magice\UI\Tag;
 
     /**
@@ -36,20 +37,28 @@ namespace Magice\Mvc\View\Asset {
          * Helper reset to append asset to header
          *
          * @param bool $flag
+         *
+         * @return $this
          */
         public function header($flag = true)
         {
             $this->appendTo = $flag ? self::ADD_TO_HEADER : self::ADD_TO_FOOTER;
+
+            return $this;
         }
 
         /**
-         * Helper reset to append asset to header
+         * Helper reset to append asset to footer
          *
          * @param bool $flag
+         *
+         * @return $this
          */
         public function footer($flag = true)
         {
             $this->appendTo = $flag ? self::ADD_TO_FOOTER : self::ADD_TO_HEADER;
+
+            return $this;
         }
 
         /**
@@ -95,6 +104,10 @@ namespace Magice\Mvc\View\Asset {
          * Add script file
          *
          * @param string $file File path (full path)
+         *                     TODO: add other property in array eg. array(async => true)
+         *                     TODO: add second param to easy flag async
+         *
+         * @return $this
          */
         function script($file)
         {
@@ -102,12 +115,16 @@ namespace Magice\Mvc\View\Asset {
                 'src'  => $file,
                 'type' => 'text/javascript'
             );
+
+            return $this;
         }
 
         /**
          * Declare script tag
          *
          * @param string $text
+         *
+         * @return $this
          */
         public function scriptDeclared($text)
         {
@@ -115,6 +132,8 @@ namespace Magice\Mvc\View\Asset {
                 'text' => $text,
                 'type' => 'text/javascript'
             );
+
+            return $this;
         }
 
         /**
@@ -122,6 +141,8 @@ namespace Magice\Mvc\View\Asset {
          *
          * @param string $file Style file path (full path)
          * @param string $media
+         *
+         * @return $this
          */
         public function style($file, $media = 'all')
         {
@@ -131,6 +152,8 @@ namespace Magice\Mvc\View\Asset {
                 'href'  => $file,
                 'media' => $media
             );
+
+            return $this;
         }
 
         /**
@@ -139,6 +162,8 @@ namespace Magice\Mvc\View\Asset {
          * @param string $text
          * @param string $media
          * @param bool   $scoped
+         *
+         * @return $this
          */
         public function styleDeclared($text, $media = 'all', $scoped = false)
         {
@@ -147,6 +172,8 @@ namespace Magice\Mvc\View\Asset {
                 'media'  => $media,
                 'scoped' => $scoped
             );
+
+            return $this;
         }
 
         /**
@@ -157,7 +184,7 @@ namespace Magice\Mvc\View\Asset {
          * @param    string  $callback  javascript function name to fire when loaded (work only $ondemand = false)
          * @param    string  $namespace check existing namspace for onfly asset
          *
-         * @return    void|string string if $ondemand = false
+         * @return   $this
          */
         public function import($selector, $ondemand = true, $callback = null, $namespace = null)
         {
@@ -254,6 +281,8 @@ namespace Magice\Mvc\View\Asset {
 
                 $this->scriptDeclared('AssetsCALL(' . json_encode($assets) . ');');
             }
+
+            return $this;
         }
 
         public function output($at = self::ADD_TO_HEADER)
