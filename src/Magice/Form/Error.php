@@ -2,7 +2,7 @@
 namespace Magice\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 
 class Error
 {
@@ -17,16 +17,16 @@ class Error
     }
 
     /**
-     * @param Form $form
+     * @param FormInterface $form
      *
      * @return array
      */
-    public function all(Form $form)
+    public function all(FormInterface $form)
     {
         return array_merge($this->getFormErrors($form), $this->getFieldErrors($form));
     }
 
-    public function allHtml(Form $form)
+    public function allHtml(FormInterface $form)
     {
         $all = $this->all($form);
 
@@ -55,11 +55,11 @@ class Error
     }
 
     /**
-     * @param Form $form
+     * @param FormInterface $form
      *
      * @return array
      */
-    public function getErrors(Form $form)
+    public function getErrors(FormInterface $form)
     {
         $errors = array();
 
@@ -71,7 +71,7 @@ class Error
         return $errors;
     }
 
-    public function getFormErrors(Form $form)
+    public function getFormErrors(FormInterface $form)
     {
         $errors = array();
 
@@ -82,7 +82,7 @@ class Error
         return $errors;
     }
 
-    public function getFieldErrors(Form $form)
+    public function getFieldErrors(FormInterface $form)
     {
         $errors = array();
 
