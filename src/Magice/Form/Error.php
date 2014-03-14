@@ -4,16 +4,19 @@ namespace Magice\Form;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
 
-class Error
+class Error implements \Countable
 {
     private $container;
+    private $form;
 
     /**
      * @param ContainerInterface $container
+     * @param FormInterface      $form
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, FormInterface $form = null)
     {
         $this->container = $container;
+        $this->form      = $form;
     }
 
     /**
@@ -21,12 +24,18 @@ class Error
      *
      * @return array
      */
-    public function all(FormInterface $form)
+    public function all(FormInterface $form = null)
     {
+        $form = $form ? : $this->form;
+
+        if (empty($form)) {
+            return array();
+        }
+
         return array_merge($this->getFormErrors($form), $this->getFieldErrors($form));
     }
 
-    public function allHtml(FormInterface $form)
+    public function allHtml(FormInterface $form = null)
     {
         $all = $this->all($form);
 
@@ -71,8 +80,14 @@ class Error
         return $errors;
     }
 
-    public function getFormErrors(FormInterface $form)
+    public function getFormErrors(FormInterface $form = null)
     {
+        $form = $form ? : $this->form;
+
+        if (empty($form)) {
+            return array();
+        }
+
         $errors = array();
 
         if ($err = $this->getErrors($form)) {
@@ -84,6 +99,12 @@ class Error
 
     public function getFieldErrors(FormInterface $form)
     {
+        $form = $form ? : $this->form;
+
+        if (empty($form)) {
+            return array();
+        }
+
         $errors = array();
 
         foreach ($form->all() as $key => $child) {
@@ -93,5 +114,19 @@ class Error
         }
 
         return $errors;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Count elements of an object
+     * @link http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     */
+    public function count()
+    {
+        return count($this->all());
     }
 }
