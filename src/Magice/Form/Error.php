@@ -6,7 +6,14 @@ use Symfony\Component\Form\FormInterface;
 
 class Error implements \Countable
 {
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var \Symfony\Component\Form\FormInterface
+     */
     private $form;
 
     /**
@@ -35,6 +42,11 @@ class Error implements \Countable
         return array_merge($this->getFormErrors($form), $this->getFieldErrors($form));
     }
 
+    /**
+     * @param FormInterface $form
+     *
+     * @return null|string
+     */
     public function allHtml(FormInterface $form = null)
     {
         $all = $this->all($form);
@@ -97,6 +109,11 @@ class Error implements \Countable
         return $errors;
     }
 
+    /**
+     * @param FormInterface $form
+     *
+     * @return array
+     */
     public function getFieldErrors(FormInterface $form)
     {
         $form = $form ? : $this->form;
