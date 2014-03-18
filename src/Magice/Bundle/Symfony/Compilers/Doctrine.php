@@ -23,17 +23,18 @@ namespace Magice\Bundle\Symfony\Compilers {
             $builder->setParameter('doctrine.orm.entity_manager.class', 'Magice\Orm\Manager');
             $builder->getDefinition('doctrine.orm.entity_manager.abstract')
                 ->setClass('Magice\Orm\Manager')
-                ->setFactoryClass('Magice\Orm\Manager')
-            ;
+                ->setFactoryClass('Magice\Orm\Manager');
 
             /**
              * @var Registry $dc
              */
             $dc    = $builder->get('doctrine');
             $names = $dc->getManagerNames();
+
             foreach ($names as $name => $id) {
                 $config = $builder->getDefinition(sprintf('doctrine.orm.%s_configuration', $name));
 
+                // TODO: set config to allow user choice
                 // replace setRepositoryFactory
                 if ($config->hasMethodCall('setRepositoryFactory')) {
                     $config->removeMethodCall('setRepositoryFactory');
@@ -44,6 +45,12 @@ namespace Magice\Bundle\Symfony\Compilers {
                 $factory->setPublic(false);
 
                 $config->addMethodCall('setRepositoryFactory', array($factory));
+
+                // TODO: set config to allow user choice
+                $config->addMethodCall(
+                    'addCustomStringFunction',
+                    array('convert_using', 'Magice\Orm\Doctrine\Functions\ConvertUsing')
+                );
             }
         }
     }
