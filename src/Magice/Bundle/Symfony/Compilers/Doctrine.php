@@ -49,7 +49,7 @@ namespace Magice\Bundle\Symfony\Compilers {
                 // TODO: set config to allow user choice
                 $config->addMethodCall(
                     'addCustomStringFunction',
-                    array('convert_using', 'Magice\Orm\Doctrine\Functions\ConvertUsing')
+                    array('CONVERT', 'Magice\Orm\Doctrine\Functions\ConvertUsing')
                 );
             }
         }
