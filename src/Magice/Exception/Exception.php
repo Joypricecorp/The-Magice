@@ -5,36 +5,80 @@ namespace Magice\Exception {
 
     class Exception extends \Exception
     {
-        protected $defaultMessage = 'Oops! An error eccurred. Please try again later.';
+        protected $messageUser;
+        protected $messageDebug;
+        protected $errorCode;
 
-        public function __construct($message, $code = 0)
+        protected static $isDebug = true;
+
+        public function __construct($message, $code = 0, \Exception $e = null)
         {
-            $debug       = true;//Param::get('kernel.debug');
-            $messageCode = null;
+            if ($message instanceof \Exception) {
+                if (empty($code)) {
+                    $code = $message->getCode();
+                }
+
+                $message = $message->getMessage();
+            }
 
             if (is_array($message)) {
-
-                if (!empty($message['code'])) {
-                    $messageCode = $message['code'];
+                if (isset($message['user'])) {
+                    $this->messageUser = $message['user'];
                 }
 
-                switch (true) {
-                    case $debug:
-                        $message = isset($message['debug']) ? $message['debug'] : (isset($message['user']) ? $message['user'] : $this->defaultMessage);
-                        break;
-                    default:
-                        $message = (isset($message['user'])) ? $message['user'] : $this->defaultMessage;
-                        break;
+                if (isset($message['debug'])) {
+                    $this->messageDebug = $message['debug'];
                 }
+
+                if (isset($message['code'])) {
+                    $this->errorCode = $message['code'];
+                }
+            } else {
+                $this->messageUser = $message;
             }
 
-            // TODO: parse message with: :[user] xxxx :[debug] xxxxx
-
-            if ($messageCode) {
-                $message = sprintf('[%s] %s', $messageCode, $message);
+            if (empty($this->errorCode)) {
+                $this->errorCode = $code;
             }
 
-            parent::__construct($message, $code);
+            if (static::$isDebug) {
+                $message = trim(
+                    sprintf(
+                        '%s %s %s',
+                        $this->errorCode ? ('[code] ' . $this->errorCode) : null,
+                        $this->messageDebug ? ('[debug] ' . $this->messageDebug) : null,
+                        $this->messageUser ? ('[user] ' . $this->messageUser) : null
+                    )
+                );
+            } else {
+                $message = $this->messageUser;
+            }
+
+            parent::__construct($message, $this->errorCode, $e);
+        }
+
+        /**
+         * @param $flag
+         */
+        public static function setDebugMode($flag)
+        {
+            static::$isDebug = $flag;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getMessageUser()
+        {
+            return $this->messageUser;
+        }
+
+        /**
+         * @return mixed
+         */
+        public function getMessageDebug()
+        {
+            return $this->messageDebug;
         }
     }
 }
