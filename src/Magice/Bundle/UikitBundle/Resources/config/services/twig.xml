@@ -16,7 +16,7 @@
 			<tag name="twig.extension"/>
 		</service>
 
-		<service id="magice_uikit.twig.extension.label" class="%magice_uikit.twig.extension..class.label%">
+		<service id="magice_uikit.twig.extension.label" class="%magice_uikit.twig.extension.class.label%">
 			<tag name="twig.extension"/>
 		</service>
 
