@@ -59,7 +59,7 @@ class Form extends \Twig_Extension
      */
     public function getName()
     {
-        return 'magice_uk_form';
+        return 'uk_form';
     }
 
     /**

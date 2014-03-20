@@ -79,6 +79,6 @@ class Collection extends AbstractType
      */
     public function getName()
     {
-        return 'bootstrap_collection';
+        return 'uk_collection';
     }
 }

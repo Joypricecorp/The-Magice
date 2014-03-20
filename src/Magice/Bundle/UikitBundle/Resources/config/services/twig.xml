@@ -11,19 +11,19 @@
 	</parameters>
 
 	<services>
-		<!--
-				<service id="magice_uikit.twig.extension.icon" class="%magice_uikit.twig.extension.class.icon%">
-					<tag name="twig.extension" />
-				</service>
 
-				<service id="magice_uikit.twig.extension.label" class="%magice_uikit.twig.extension..class.label%">
-					<tag name="twig.extension" />
-				</service>
+		<service id="magice_uikit.twig.extension.icon" class="%magice_uikit.twig.extension.class.icon%">
+			<tag name="twig.extension"/>
+		</service>
 
-				<service id="magice_uikit.twig.extension.badge" class="%magice_uikit.twig.extension.class.badge%">
-					<tag name="twig.extension" />
-				</service>
-		-->
+		<service id="magice_uikit.twig.extension.label" class="%magice_uikit.twig.extension..class.label%">
+			<tag name="twig.extension"/>
+		</service>
+
+		<service id="magice_uikit.twig.extension.badge" class="%magice_uikit.twig.extension.class.badge%">
+			<tag name="twig.extension"/>
+		</service>
+
 		<service id="magice_uikit.twig.extension.form" class="%magice_uikit.twig.extension.class.form%">
 			<tag name="twig.extension"/>
 		</service>
