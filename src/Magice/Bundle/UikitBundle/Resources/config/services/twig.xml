@@ -4,27 +4,27 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="braincrafted_bootstrap.twig.icon_extension.class">Braincrafted\Bundle\BootstrapBundle\Twig\BootstrapIconExtension</parameter>
-        <parameter key="braincrafted_bootstrap.twig.label_extension.class">Braincrafted\Bundle\BootstrapBundle\Twig\BootstrapLabelExtension</parameter>
-        <parameter key="braincrafted_bootstrap.twig.badge_extension.class">Braincrafted\Bundle\BootstrapBundle\Twig\BootstrapBadgeExtension</parameter>
-        <parameter key="braincrafted_bootstrap.twig.form_extension.class">Braincrafted\Bundle\BootstrapBundle\Twig\BootstrapFormExtension</parameter>
+        <parameter key="magice_uikit.twig.extension.icon.class">Magice\Bundle\UikitBundle\Twig\IconExtension</parameter>
+        <parameter key="magice_uikit.twig.extension.label.class">Magice\Bundle\UikitBundle\Twig\LabelExtension</parameter>
+        <parameter key="magice_uikit.twig.extension.badge.class">Magice\Bundle\UikitBundle\Twig\BadgeExtension</parameter>
+        <parameter key="magice_uikit.twig.extension.form.class">Magice\Bundle\UikitBundle\Twig\FormExtension</parameter>
     </parameters>
 
     <services>
 
-        <service id="braincrafted_bootstrap.twig.icon_extension" class="%braincrafted_bootstrap.twig.icon_extension.class%">
+        <service id="magice_uikit.twig.extension.icon" class="%magice_uikit.twig.extension.icon.class%">
             <tag name="twig.extension" />
         </service>
 
-        <service id="braincrafted_bootstrap.twig.label_extension" class="%braincrafted_bootstrap.twig.label_extension.class%">
+        <service id="magice_uikit.twig.extension.label" class="%magice_uikit.twig.extension.label.class%">
             <tag name="twig.extension" />
         </service>
 
-        <service id="braincrafted_bootstrap.twig.badge_extension" class="%braincrafted_bootstrap.twig.badge_extension.class%">
+        <service id="magice_uikit.twig.extension.badge" class="%magice_uikit.twig.extension.badge.class%">
             <tag name="twig.extension" />
         </service>
 
-        <service id="braincrafted_bootstrap.twig.form_extension" class="%braincrafted_bootstrap.twig.form_extension.class%">
+        <service id="magice_uikit.twig.extension.form" class="%magice_uikit.twig.extension.form.class%">
             <tag name="twig.extension" />
         </service>
 
