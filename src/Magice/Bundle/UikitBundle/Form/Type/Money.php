@@ -1,26 +1,13 @@
 <?php
-/**
- * This file is part of BraincraftedBootstrapBundle.
- * (c) 2012-2013 by Florian Eckerstorfer
- */
 
-namespace Braincrafted\Bundle\BootstrapBundle\Form\Type;
+namespace Magice\Bundle\UikitBundle\Form\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\MoneyType as BaseMoneyType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-/**
- * MoneyType
- *
- * @package    BraincraftedBootstrapBundle
- * @subpackage Form
- * @author     Florian Eckerstorfer <florian@eckerstorfer.co>
- * @copyright  2012-2013 Florian Eckerstorfer
- * @license    http://opensource.org/licenses/MIT The MIT License
- * @link       http://bootstrap.braincrafted.com Bootstrap for Symfony2
- */
-class MoneyType extends BaseMoneyType
+
+class Money extends BaseMoneyType
 {
     /**
      * {@inheritdoc}
@@ -40,7 +27,6 @@ class MoneyType extends BaseMoneyType
 
     /**
      * Returns the pattern for this locale
-     *
      * The pattern contains the placeholder "{{ widget }}" where the HTML tag should
      * be inserted
      *
@@ -61,7 +47,7 @@ class MoneyType extends BaseMoneyType
         }
 
         if (!isset(self::$patterns[$locale][$currency])) {
-            $format = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+            $format  = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
             $pattern = $format->formatCurrency('123', $currency);
 
             // the spacings between currency symbol and number are ignored, because
@@ -91,11 +77,11 @@ class MoneyType extends BaseMoneyType
     protected static function parsePatternMatches(array $matches)
     {
         if (!empty($matches[1])) {
-            return '{{ tag_start }}'.$matches[1].'{{ tag_end }} {{ widget }}';
+            return '{{ tag_start }}' . $matches[1] . '{{ tag_end }} {{ widget }}';
         }
 
         if (!empty($matches[2])) {
-            return '{{ widget }} {{ tag_start }}'.$matches[2].'{{ tag_end }}';
+            return '{{ widget }} {{ tag_start }}' . $matches[2] . '{{ tag_end }}';
         }
 
         // @codeCoverageIgnoreStart

@@ -5,12 +5,12 @@ namespace Magice\Bundle\UikitBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Button;
 use Symfony\Component\Form\ButtonBuilder;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FormActionsType extends AbstractType
+class FormActions extends AbstractType
 {
     /**
      * {@inheritdoc}

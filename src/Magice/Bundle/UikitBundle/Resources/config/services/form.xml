@@ -4,28 +4,27 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="braincrafted_bootstrap.form.type.collection.class">Braincrafted\Bundle\BootstrapBundle\Form\Type\BootstrapCollectionType</parameter>
-        <parameter key="braincrafted_bootstrap.form.type.money.class">Braincrafted\Bundle\BootstrapBundle\Form\Type\MoneyType</parameter>
-        <parameter key="braincrafted_bootstrap.form.type.form_actions.class">Braincrafted\Bundle\BootstrapBundle\Form\Type\FormActionsType</parameter>
-        <parameter key="braincrafted_bootstrap.form.extension.typesetter_extension.class">Braincrafted\Bundle\BootstrapBundle\Form\Extension\TypeSetterExtension</parameter>
+        <parameter key="magice_uikit.form.type.class.collection">Magice\Bundle\UikitBundle\Form\Type\Collection</parameter>
+        <parameter key="magice_uikit.form.type.class.money">Magice\Bundle\UikitBundle\Form\Type\Money</parameter>
+        <parameter key="magice_uikit.form.type.class.form_actions">Magice\Bundle\UikitBundle\Form\Type\FormActions</parameter>
+        <parameter key="magice_uikit.form.extension.class.typesetter">Magice\Bundle\UikitBundle\Form\Extension\TypeSetter</parameter>
     </parameters>
 
     <services>
-
-        <service id="braincrafted_bootstrap.form.type.collection" class="%braincrafted_bootstrap.form.type.collection.class%">
-            <tag name="form.type" alias="bootstrap_collection" />
+        <service id="magice_uikit.form.type.collection" class="%magice_uikit.form.type.class.collection%">
+            <tag name="form.type" alias="uk_collection" />
         </service>
 
-        <service id="braincrafted_bootstrap.form.type.money" class="%braincrafted_bootstrap.form.type.money.class%">
+        <service id="magice_uikit.form.type.money" class="%magice_uikit.form.type.class.money%">
             <tag name="form.type" alias="money" />
         </service>
 
-        <service id="braincrafted_bootstrap.form.type.form_actions" class="%braincrafted_bootstrap.form.type.form_actions.class%">
+        <service id="magice_uikit.form.type.form_actions" class="%magice_uikit.form.type.class.form_actions%">
             <tag name="form.type" alias="form_actions" />
         </service>
 
-        <service id="braincrafted_bootstrap.form.extension.typesetter_extension" class="%braincrafted_bootstrap.form.extension.typesetter_extension.class%">
-            <tag name="form.type_extension" alias="form" />
+        <service id="magice_uikit.form.extension.typesetter" class="%magice_uikit.form.extension.class.typesetter%">
+            <tag name="form.type.extension" alias="form" />
         </service>
 
     </services>

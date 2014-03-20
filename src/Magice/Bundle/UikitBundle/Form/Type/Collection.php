@@ -1,10 +1,6 @@
 <?php
-/**
- * This file is part of BraincraftedBootstrapBundle.
- * (c) 2012-2013 by Florian Eckerstorfer
- */
 
-namespace Braincrafted\Bundle\BootstrapBundle\Form\Type;
+namespace Magice\Bundle\UikitBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormView;
@@ -12,17 +8,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-/**
- * BootstrapCollectionType
- *
- * @package    BraincraftedBootstrapBundle
- * @subpackage Form
- * @author     Florian Eckerstorfer <florian@eckerstorfer.co>
- * @copyright  2012-2013 Florian Eckerstorfer
- * @license    http://opensource.org/licenses/MIT The MIT License
- * @link       http://bootstrap.braincrafted.com Bootstrap for Symfony2
- */
-class BootstrapCollectionType extends AbstractType
+class Collection extends AbstractType
 {
     /**
      * {@inheritdoc}
