@@ -6,7 +6,7 @@
 
 namespace Magice\Bundle\UikitBundle\Twig;
 
-class FormExtension extends \Twig_Extension
+class Form extends \Twig_Extension
 {
     /** @var string */
     private $style;
