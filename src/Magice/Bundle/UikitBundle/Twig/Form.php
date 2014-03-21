@@ -39,6 +39,10 @@ class Form extends \Twig_Extension
             new \Twig_SimpleFunction('uk_get_label_col', array($this, 'getLabelCol')),
             new \Twig_SimpleFunction('uk_set_simple_col', array($this, 'setSimpleCol')),
             new \Twig_SimpleFunction('uk_get_simple_col', array($this, 'getSimpleCol')),
+            'form_field'       => new \Twig_Function_Node(
+                    'Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode',
+                    array('is_safe' => array('html'))
+                ),
             'checkbox_row'       => new \Twig_Function_Node(
                     'Symfony\Bridge\Twig\Node\SearchAndRenderBlockNode',
                     array('is_safe' => array('html'))
