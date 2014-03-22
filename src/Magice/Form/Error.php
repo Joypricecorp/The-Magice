@@ -134,6 +134,30 @@ class Error implements \Countable
     }
 
     /**
+     * @param FormInterface $form
+     *
+     * @return array
+     */
+    public function getErrorFields(FormInterface $form)
+    {
+        $form = $form ? : $this->form;
+
+        if (empty($form)) {
+            return array();
+        }
+
+        $errors = array();
+
+        foreach ($form->all() as $key => $child) {
+            if ($err = $this->getErrors($child)) {
+                $errors[$key] = $key;
+            }
+        }
+
+        return array_values($errors);
+    }
+
+    /**
      * (PHP 5 &gt;= 5.1.0)<br/>
      * Count elements of an object
      * @link http://php.net/manual/en/countable.count.php
