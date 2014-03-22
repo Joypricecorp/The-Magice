@@ -21,9 +21,8 @@ abstract class Type extends AbstractType
         }
 
         if (
-            (isset($options['auto_error_mapping']) && $options['auto_error_mapping'] !== false)
-            && (!isset($options['error_mapping']))
-            && isset($options['data_class']) && ($class = $options['data_class'])
+            (!isset($options['error_mapping']))
+            && (isset($options['data_class']) && ($class = $options['data_class']))
         ) {
             foreach ((new \ReflectionClass($class))->getProperties() as $p) {
                 $maps[$p->getName()] = String::underscore($p->getName());

@@ -21,11 +21,12 @@ class NoEmptyValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\NoEmpty');
         }
 
+        $stringValue = (string) $value;
         // remove none char
         $value = preg_replace('/\W|_/u', '', $value);
 
         if (false === $value || (empty($value) && '0' != $value)) {
-            $this->context->addViolation($constraint->message);
+            $this->context->addViolation($constraint->message, array('{{ value }}' => (string) $stringValue));
         }
     }
 }
