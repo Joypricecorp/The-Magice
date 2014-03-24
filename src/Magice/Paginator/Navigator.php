@@ -1,9 +1,7 @@
 <?php
-namespace Magice\Paginator\Layout;
+namespace Magice\Paginator;
 
-use Magice\Paginator\PaginatorInterface;
-
-class NavigateLayout implements NavigateLayoutInterface
+class Navigator implements NavigatorInterface
 {
     private $midRange = 5;
     private $baseUri;
@@ -16,13 +14,19 @@ class NavigateLayout implements NavigateLayoutInterface
 
     public function start($i)
     {
-        return (($i-1) * $this->pageSize);
+        return (($i - 1) * $this->pageSize);
     }
 
     public function getNavigator(PaginatorInterface $paginator)
     {
-        $pageSize       = $paginator->getPageSize();
-        $totalPages     = $paginator->getTotalPages();
+        $buffer     = '';
+        $pageSize   = $paginator->getPageSize();
+        $totalPages = $paginator->getTotalPages();
+
+        if ($totalPages <= 1) {
+            return $buffer;
+        }
+
         $currentPage    = ceil(($paginator->getStart() + 1) / $pageSize);
         $this->pageSize = $pageSize;
 
@@ -37,7 +41,6 @@ class NavigateLayout implements NavigateLayoutInterface
         $prevPage = $currentPage - 1;
         $nextPage = $currentPage + 1;
 
-        $buffer   = '';
         $iconPrev = '<i class="uk-icon-angle-double-left"></i>';
         $iconNext = '<i class="uk-icon-angle-double-right"></i>';
 

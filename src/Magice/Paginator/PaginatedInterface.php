@@ -1,7 +1,6 @@
 <?php
 namespace Magice\Paginator;
 
-interface PaginatedInterface extends \Countable
+interface PaginatedInterface extends \Countable, \IteratorAggregate
 {
-    public function getSlice($length, $offset);
 }

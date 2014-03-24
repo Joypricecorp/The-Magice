@@ -34,20 +34,14 @@ class Paginator implements PaginatorInterface
     protected $total;
 
     /**
-     * @var Layout\NavigateLayoutInterface
+     * @var NavigatorInterface
      */
     protected $layout;
 
-    /**
-     * Cache the count of the items
-     * @var integer
-     **/
-    protected $itemsCountCache;
-
-    function __construct(PaginatedInterface $items, Offset $offset, NavigateLayout $layout = null)
+    function __construct(PaginatedInterface $items, Offset $offset, NavigatorInterface $layout = null)
     {
         $this->items  = $items;
-        $this->layout = $layout ? : new Layout\NavigateLayout();
+        $this->layout = $layout ? : new Navigator();
 
         $this->setPageSize($offset->limit);
         $this->setStart($offset->start);
@@ -66,11 +60,6 @@ class Paginator implements PaginatorInterface
     public function getPageSize()
     {
         return $this->pageSize;
-    }
-
-    public function getPage($pageNumber)
-    {
-        return new Page($this, $pageNumber);
     }
 
     public function setStart($start)
@@ -95,20 +84,17 @@ class Paginator implements PaginatorInterface
 
     public function getTotalPages()
     {
-        return (int) ceil($this->getCount() / $this->pageSize);
+        return (int) ceil($this->getTotal() / $this->pageSize);
     }
 
     public function getPageRange()
     {
-        return range(0, $this->getCount() - 1);
+        return range(0, $this->getTotalPages() - 1);
     }
 
     public function getCount()
     {
-        if ($this->itemsCountCache === null) {
-            $this->itemsCountCache = count($this->items);
-        }
-        return $this->itemsCountCache;
+        return $this->items->count();
     }
 
     public function getItems()
@@ -116,7 +102,7 @@ class Paginator implements PaginatorInterface
         return $this->items;
     }
 
-    public function setNavicatorLayout(Layout\NavigateLayoutInterface $navigate)
+    public function setNavicatorLayout(NavigatorInterface $navigate)
     {
         $this->layout = $navigate;
     }

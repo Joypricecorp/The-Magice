@@ -7,8 +7,6 @@ interface PaginatorInterface
 
     public function getPageSize();
 
-    public function getPage($numPage);
-
     public function getTotalPages();
 
     public function getPageRange();
@@ -25,7 +23,7 @@ interface PaginatorInterface
 
     public function getTotal();
 
-    public function setNavicatorLayout(Layout\NavigateLayoutInterface $navigate);
+    public function setNavicatorLayout(NavigatorInterface $navigate);
 
     public function getNavigator();
 }
