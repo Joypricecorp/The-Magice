@@ -80,5 +80,17 @@ namespace Magice\Exception {
         {
             return $this->messageDebug;
         }
+
+        public static function create($msg, $code = 0, \Exception $e = null)
+        {
+            return new self($msg, $code, $e);
+        }
+
+        public static function createMessage()
+        {
+            $msg = call_user_func_array('sprintf', func_get_args());
+
+            return new self($msg, 0, null);
+        }
     }
 }

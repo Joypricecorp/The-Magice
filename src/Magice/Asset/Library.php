@@ -9,6 +9,7 @@ namespace Magice\Asset {
      * @author      ツ Liverbool <liverbool@joyprice.com>
      * @version     1.0
      * @since       1.0
+     * @deprecated
      */
     class Library
     {
