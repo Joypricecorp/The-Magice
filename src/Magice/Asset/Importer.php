@@ -47,6 +47,7 @@ class Importer
     {
         $libs   = static::$libs ? : Configuration::parse();
         $params = $libs['parameters'];
+        $async  = $libs['async'];
 
         foreach ($keys as $key) {
             self::find($key, $libs['libraries']);
@@ -64,7 +65,7 @@ class Importer
             if (preg_match('/css/', $key)) {
                 static::$tags['css'][] = self::tagStyle($file);
             } else {
-                static::$tags['js'][] = self::tagScript($file);
+                static::$tags['js'][] = self::tagScript($file, $async);
             }
         }
     }
