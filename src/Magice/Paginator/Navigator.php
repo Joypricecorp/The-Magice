@@ -5,14 +5,51 @@ class Navigator implements NavigatorInterface
 {
     private $midRange = 5;
     private $baseUri;
+    private $appendParam;
     private $pageSize;
 
-    public function __construct($baseUri = '')
+    public function __construct($baseUri = '', $appendParam = null)
     {
-        $this->baseUri = $baseUri;
+        $this->baseUri     = $baseUri;
+        $this->appendParam = $appendParam === true ? strip_tags($_SERVER['QUERY_STRING']) : $appendParam;
     }
 
-    public function start($i)
+    private function appendParam($buffer)
+    {
+        if (empty($this->appendParam)) {
+            return $buffer;
+        }
+
+        if (is_string($this->appendParam)) {
+            $arr = array();
+            parse_str($this->appendParam, $arr);
+            $this->appendParam = $arr;
+        }
+
+        if (is_object($this->appendParam)) {
+            $this->appendParam = (array) $this->appendParam;
+        }
+
+        if (isset($this->appendParam['start'])) {
+            unset($this->appendParam['start']);
+        }
+
+        if (isset($this->appendParam['limit'])) {
+            unset($this->appendParam['limit']);
+        }
+
+        if (is_array($this->appendParam)) {
+            $this->appendParam = http_build_query($this->appendParam);
+        }
+
+        if (empty($this->appendParam)) {
+            return $buffer;
+        }
+
+        return $buffer . '&' . $this->appendParam;
+    }
+
+    private function start($i)
     {
         return (($i - 1) * $this->pageSize);
     }
@@ -92,6 +129,6 @@ class Navigator implements NavigatorInterface
             }
         }
 
-        return sprintf('<ul class="uk-pagination">%s</ul>', $buffer);
+        return sprintf('<ul class="uk-pagination">%s</ul>', $this->appendParam($buffer));
     }
 }
