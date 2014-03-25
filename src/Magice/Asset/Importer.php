@@ -8,6 +8,7 @@ class Importer
     protected static $libs = array();
     protected static $files = array();
     protected static $tags = array();
+    protected static $params = array();
 
     public static function import($type, $keys, $callback = null)
     {
@@ -43,11 +44,17 @@ class Importer
         return self::import('css', $keys);
     }
 
+    public static function setParameter($key, $value)
+    {
+        static::$params[$key] = $value;
+    }
+
     protected static function _import($keys)
     {
-        $libs   = static::$libs ? : Configuration::parse();
-        $params = $libs['parameters'];
-        $async  = $libs['async'];
+        $libs  = static::$libs ? : Configuration::parse();
+        $async = $libs['async'];
+
+        $params = static::$params = array_merge(static::$params, (array) $libs['parameters']);
 
         foreach ($keys as $key) {
             self::find($key, $libs['libraries']);
