@@ -93,7 +93,7 @@ class Importer
 
         foreach (static::$files as $key => $file) {
             $file = preg_replace_callback(
-                '/\{(.*)\}/i',
+                '/\{(.*)\}/Ui',
                 function ($match) use ($params) {
                     return isset($params[$match[1]]) ? $params[$match[1]] : null;
                 },
