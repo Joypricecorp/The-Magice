@@ -3,6 +3,8 @@ namespace Magice\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormError;
 
 class Error implements \Countable
 {
@@ -12,26 +14,26 @@ class Error implements \Countable
     private $container;
 
     /**
-     * @var \Symfony\Component\Form\FormInterface
+     * @var FormInterface|FormView
      */
     private $form;
 
     /**
-     * @param ContainerInterface $container
-     * @param FormInterface      $form
+     * @param ContainerInterface     $container
+     * @param FormInterface|FormView $form
      */
-    public function __construct(ContainerInterface $container, FormInterface $form = null)
+    public function __construct(ContainerInterface $container, $form = null)
     {
         $this->container = $container;
         $this->form      = $form;
     }
 
     /**
-     * @param FormInterface $form
+     * @param FormInterface|FormView $form
      *
      * @return array
      */
-    public function all(FormInterface $form = null)
+    public function all($form = null)
     {
         $form = $form ? : $this->form;
 
@@ -43,11 +45,11 @@ class Error implements \Countable
     }
 
     /**
-     * @param FormInterface $form
+     * @param FormInterface|FormView $form
      *
      * @return null|string
      */
-    public function allHtml(FormInterface $form = null)
+    public function allHtml($form = null)
     {
         $all = $this->all($form);
 
@@ -76,23 +78,43 @@ class Error implements \Countable
     }
 
     /**
-     * @param FormInterface $form
+     * @param FormInterface|FormView $form
      *
      * @return array
      */
-    public function getErrors(FormInterface $form)
+    public function getErrors($form)
     {
         $errors = array();
+        $trans  = $this->container->get('translator');
 
-        foreach ($form->getErrors() as $error) {
-            $message = $this->container->get('translator')->trans($error->getMessage(), array(), 'validators');
-            array_push($errors, $message);
+        if ($form instanceof FormInterface) {
+            foreach ($form->getErrors() as $error) {
+                $message = $trans->trans($error->getMessage(), array(), 'validators');
+                array_push($errors, $message);
+            }
+        }
+
+        if ($form instanceof FormView) {
+            $errs = isset($form->vars['errors']) ? $form->vars['errors'] : array();
+
+            /**
+             * @var FormError $error
+             */
+            foreach ($errs as $error) {
+                $message = $trans->trans($error->getMessage(), array(), $form->vars['translation_domain']);
+                array_push($errors, $message);
+            }
         }
 
         return $errors;
     }
 
-    public function getFormErrors(FormInterface $form = null)
+    /**
+     * @param FormInterface|FormView $form
+     *
+     * @return array
+     */
+    public function getFormErrors($form = null)
     {
         $form = $form ? : $this->form;
 
@@ -110,11 +132,11 @@ class Error implements \Countable
     }
 
     /**
-     * @param FormInterface $form
+     * @param FormInterface|FormView $form
      *
      * @return array
      */
-    public function getFieldErrors(FormInterface $form)
+    public function getFieldErrors($form)
     {
         $form = $form ? : $this->form;
 
@@ -123,8 +145,9 @@ class Error implements \Countable
         }
 
         $errors = array();
+        $childs = $form instanceof FormView ? $form->children : $form->all();
 
-        foreach ($form->all() as $key => $child) {
+        foreach ($childs as $key => $child) {
             if ($err = $this->getErrors($child)) {
                 $errors[$key] = $err;
             }
@@ -134,11 +157,11 @@ class Error implements \Countable
     }
 
     /**
-     * @param FormInterface $form
+     * @param FormInterface|FormView $form
      *
      * @return array
      */
-    public function getErrorFields(FormInterface $form)
+    public function getErrorFields($form)
     {
         $form = $form ? : $this->form;
 
@@ -147,8 +170,9 @@ class Error implements \Countable
         }
 
         $errors = array();
+        $childs = $form instanceof FormView ? $form->children : $form->all();
 
-        foreach ($form->all() as $key => $child) {
+        foreach ($childs as $key => $child) {
             if ($err = $this->getErrors($child)) {
                 $errors[$key] = $key;
             }
