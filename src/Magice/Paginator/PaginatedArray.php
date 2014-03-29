@@ -19,4 +19,9 @@ class PaginatedArray implements PaginatedInterface
     {
         return new \ArrayIterator($this->data);
     }
+
+    public function jsonSerialize()
+    {
+        return $this->data;
+    }
 }
