@@ -23,9 +23,19 @@ class Text implements FieldInterface
 
         $r = (object) $f->vars;
 
-        $opts = '';
+        $opts          = '';
+        $pre_icon_flag = '';
+        $pre_icon_tag  = '';
+
         if (!empty($r->_opts)) {
             $opts = (array) $r->_opts;
+
+            if (isset($opts['icon'])) {
+                $pre_icon_flag = ' icon';
+                $pre_icon_tag  = sprintf('<i class="%s icon"></i>', $opts['icon']);
+                unset($opts['icon']);
+            }
+
             $opts = ' ' . implode(' ', $opts);
         }
 
@@ -45,31 +55,34 @@ class Text implements FieldInterface
         return $form->tpl(
             '<div{attr}>',
             '   <label{label_attr}>{label}{separator}</label>',
-            '   <div class="ui left labeled input">',
+            '   <div class="ui left labeled input{pre_icon_flag}">',
             '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}"',
             '           {size}{read_only}{required}{disabled}',
             '       >',
+            '       {pre_icon_tag}',
             '       {asterisk}',
             '       {errors}',
             '   </div>',
             '</div>',
             array(
-                'id'          => $r->id,
-                'name'        => $r->full_name,
-                'value'       => $r->value,
-                'label'       => $form->trans($r->label, $r->translation_domain),
-                'label_attr'  => $form->getAttrs($r->label_attr),
-                'placeholder' => $form->trans($r->label, $r->translation_domain),
-                'separator'   => $form->labelSeparator,
-                'size'        => $form->isAttr($r, 'size', false),
-                'read_only'   => $form->isAttr($r, 'read_only'),
-                'required'    => $form->isAttr($r, 'required'),
-                'disabled'    => $form->isAttr($r, 'disabled'),
+                'id'            => $r->id,
+                'name'          => $r->full_name,
+                'value'         => $r->value,
+                'label'         => $form->trans($r->label, $r->translation_domain),
+                'label_attr'    => $form->getAttrs($r->label_attr),
+                'placeholder'   => $form->trans($r->label, $r->translation_domain),
+                'separator'     => $form->labelSeparator,
+                'size'          => $form->isAttr($r, 'size', false),
+                'read_only'     => $form->isAttr($r, 'read_only'),
+                'required'      => $form->isAttr($r, 'required'),
+                'disabled'      => $form->isAttr($r, 'disabled'),
                 // if render form widget attr will apply to cover tag
-                'attr'        => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error', $opts)),
-                'type'        => static::getType(),
-                'asterisk'    => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : '',
-                'errors'      => $errors
+                'attr'          => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error', $opts)),
+                'type'          => static::getType(),
+                'pre_icon_flag' => $pre_icon_flag,
+                'pre_icon_tag'  => $pre_icon_tag,
+                'asterisk'      => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : '',
+                'errors'        => $errors
             )
         );
     }
