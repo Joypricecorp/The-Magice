@@ -5,7 +5,7 @@ namespace Magice\Bundle\AssetBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Container;
 
-class JPAssetBundle extends Bundle
+class MagiceAssetBundle extends Bundle
 {
     /**
      * @var Container
