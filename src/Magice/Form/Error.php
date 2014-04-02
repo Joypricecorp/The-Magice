@@ -147,9 +147,17 @@ class Error implements \Countable
         $errors = array();
         $childs = $form instanceof FormView ? $form->children : $form->all();
 
+        /**
+         * @var FormView $child
+         */
         foreach ($childs as $key => $child) {
-            if ($err = $this->getErrors($child)) {
-                $errors[$key] = $err;
+
+            if (!empty($child->children)) {
+                $errors = array_merge($errors, $this->getFieldErrors($child));
+            } else {
+                if ($err = $this->getErrors($child)) {
+                    $errors[$key] = $err;
+                }
             }
         }
 
@@ -181,15 +189,6 @@ class Error implements \Countable
         return array_values($errors);
     }
 
-    /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
-     */
     public function count()
     {
         return count($this->all());

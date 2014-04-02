@@ -60,6 +60,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             new \Twig_SimpleFunction('ui_form_select', array($this, 'ui_form_select'), $self),
             new \Twig_SimpleFunction('ui_form_date', array($this, 'ui_form_date'), $self),
             new \Twig_SimpleFunction('ui_form_email', array($this, 'ui_form_email'), $self),
+            new \Twig_SimpleFunction('ui_form_url', array($this, 'ui_form_url'), $self),
+            new \Twig_SimpleFunction('ui_form_password', array($this, 'ui_form_password'), $self),
         );
     }
 
@@ -162,6 +164,10 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             return $this->ui_form_select($form, $attr, $opts);
         }
 
+        if ($r->block_prefixes[1] == 'repeated') {
+            return $this->ui_form_passwords($form, $attr, $opts);
+        }
+
         if ($r->block_prefixes[1] == 'submit') {
             return $this->ui_form_button($form, $attr, $opts, 'submit');
         }
@@ -211,6 +217,29 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         return $this->getField('Url', $form, $attr, $opts);
     }
 
+    public function ui_form_password(FormView $form, $attr = array(), $opts = array())
+    {
+        return $this->getField('Password', $form, $attr, $opts);
+    }
+
+    public function ui_form_passwords(FormView $form, $attr = array(), $opts = array())
+    {
+        $first  = $form->children['first'];
+        $second = $form->children['second'];
+
+        $attr1 = $attr;
+        $attr2 = $attr;
+
+        if (isset($attr['placeholder'])) {
+            $attr1['placeholder'] = $attr['placeholder'][0];
+            $attr2['placeholder'] = $attr['placeholder'][1];
+        }
+
+        return
+            $this->ui_form_password($first, $attr1, $opts)
+            . $this->ui_form_password($second, $attr2, $opts);
+    }
+
     public function ui_form_button(FormView $form, $attr = array(), $opts = array(), $type = 'button')
     {
         $opts['type'] = $type;
@@ -234,8 +263,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         // however, you can set it on with reset it above this call
         $this->fieldErrorMsgDisabled = true;
 
-        $msg   = null;
-        $trans = $this->container->get('translator');
+        $msg = null;
+        $t   = $this->container->get('translator');
 
         if (!empty($otherError)) {
 
@@ -243,17 +272,17 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             foreach ($otherError as $err) {
 
                 if ($err instanceof \Exception) {
-                    $msg .= sprintf('<li>%s</li>', $trans->trans($err->getMessage()));
+                    $msg .= sprintf('<li>%s</li>', $t->trans($err->getMessage()));
                 }
 
                 if ($err instanceof FormErrorMessageInterface) {
                     if ($str = (string) $err->getErrorMessage()) {
-                        $msg .= sprintf('<li>%s</li>', $trans->trans($str));
+                        $msg .= sprintf('<li>%s</li>', $t->trans($str));
                     }
                 }
 
                 if (is_string($err)) {
-                    $msg .= sprintf('<li>%s</li>', $trans->trans($err));
+                    $msg .= sprintf('<li>%s</li>', $t->trans($err));
                 }
             }
 
@@ -266,7 +295,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
                     '    <ul>{msg}</ul>',
                     '</div>',
                     array(
-                        'header' => $trans->trans("โอ๊ะโอ๋!! มีบางอย่างไม่ถูกต้อง"),
+                        'header' => $t->trans("โอ๊ะโอ๋!! มีบางอย่างไม่ถูกต้อง"),
                         'msg'    => $msg
                     )
                 );
@@ -285,7 +314,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
                     '    {msg}',
                     '</div>',
                     array(
-                        'header' => $trans->trans("โอ๊ะโอ๋!! คุณกรอกข้อมูลไม่ถูกต้อง"),
+                        'header' => $t->trans("โอ๊ะโอ๋!! คุณกรอกข้อมูลไม่ถูกต้อง"),
                         'msg'    => $error->allHtml()
                     )
                 );
