@@ -52,6 +52,12 @@ class Text implements FieldInterface
             $errors .= '</ul>';
         }
 
+        $placeholder = $r->label;
+        if (isset($r->attr['placeholder'])) {
+            $placeholder = $r->attr['placeholder'];
+            unset($r->attr['placeholder']);
+        }
+
         return $form->tpl(
             '<div{attr}>',
             '   <label{label_attr}>{label}{separator}</label>',
@@ -70,7 +76,7 @@ class Text implements FieldInterface
                 'value'         => $r->value,
                 'label'         => $form->trans($r->label, $r->translation_domain),
                 'label_attr'    => $form->getAttrs($r->label_attr),
-                'placeholder'   => $form->trans($r->label, $r->translation_domain),
+                'placeholder'   => $placeholder ? $form->trans($placeholder, $r->translation_domain) : '',
                 'separator'     => $form->labelSeparator,
                 'size'          => $form->isAttr($r, 'size', false),
                 'read_only'     => $form->isAttr($r, 'read_only'),
