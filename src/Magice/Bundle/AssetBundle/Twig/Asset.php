@@ -38,6 +38,13 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
         return 'magice_asset_twig';
     }
 
+    public function getTokenParsers()
+    {
+        return array(
+            new TokenParser\Import()
+        );
+    }
+
     public function getFunctions()
     {
         $self = array('is_safe' => array('all'));
