@@ -41,7 +41,7 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
     public function getTokenParsers()
     {
         return array(
-            new TokenParser\Imports()
+            new TokenParser\Assets()
         );
     }
 
