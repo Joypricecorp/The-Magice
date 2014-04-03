@@ -235,6 +235,9 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             $attr2['placeholder'] = $attr['placeholder'][1];
         }
 
+        $first->vars['valid']  = $form->vars['valid'];
+        $second->vars['valid'] = $form->vars['valid'];
+
         return
             $this->ui_form_password($first, $attr1, $opts)
             . $this->ui_form_password($second, $attr2, $opts);
