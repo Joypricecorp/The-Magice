@@ -38,6 +38,14 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
         return 'magice_asset_twig';
     }
 
+    public function getFunctions()
+    {
+        $self = array('is_safe' => array('all'));
+        return array(
+            new \Twig_SimpleFunction('import', array($this, 'import'), $self),
+        );
+    }
+
     public function getGlobals()
     {
         $webpath = $this->container->get('router')->getContext()->getBaseUrl();
@@ -50,7 +58,13 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
         Importer::setParameter('web', $webpath);
 
         return array(
-            'import' => new Importer()
+            'importer' => new Importer()
         );
+    }
+
+    public function import($keys)
+    {
+        Importer::setBuffer(true);
+        Importer::asset($keys);
     }
 }

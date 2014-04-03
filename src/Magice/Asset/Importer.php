@@ -100,6 +100,11 @@ class Importer
         static::$params[$key] = $value;
     }
 
+    public static function setBuffer($flag)
+    {
+        static::$buffer = $flag;
+    }
+
     protected static function _import($keys)
     {
         $libs  = static::$libs ? : Configuration::parse();
