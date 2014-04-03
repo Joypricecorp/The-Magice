@@ -41,6 +41,7 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
     public function getFunctions()
     {
         $self = array('is_safe' => array('all'));
+
         return array(
             new \Twig_SimpleFunction('import', array($this, 'import'), $self),
         );
