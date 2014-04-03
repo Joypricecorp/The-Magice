@@ -9,6 +9,7 @@ class Importer
     protected static $files = array();
     protected static $tags = array();
     protected static $params = array();
+    protected static $buffer = true;
 
     public static function import($type, $keys = null, $callback = null)
     {
@@ -44,9 +45,13 @@ class Importer
         if ($isType) {
             return implode("\n", $tags);
         } else {
-            return
-                (empty($tags['css']) ? '' : implode("\n", $tags['css'])) .
-                (empty($tags['js']) ? '' : implode("\n", $tags['js']));
+            if (static::$buffer) {
+                return null;
+            } else {
+                return
+                    (empty($tags['css']) ? '' : implode("\n", $tags['css'])) .
+                    (empty($tags['js']) ? '' : implode("\n", $tags['js']));
+            }
         }
 
     }
@@ -66,6 +71,28 @@ class Importer
     {
         $keys = func_num_args() > 1 ? func_get_args() : (array) func_get_arg(0);
         return self::import('css', $keys);
+    }
+
+    public static function render($type = null)
+    {
+        if ($type) {
+            if (isset(static::$tags[$type]) && !empty(static::$tags[$type])) {
+                return implode("\n", static::$tags[$type]);
+            }
+
+            return '';
+        } else {
+            $output = '';
+            if (isset(static::$tags['css']) && !empty(static::$tags['css'])) {
+                $output .= implode("\n", static::$tags['css']);
+            }
+
+            if (isset(static::$tags['js']) && !empty(static::$tags['js'])) {
+                $output .= implode("\n", static::$tags['js']);
+            }
+
+            return $output;
+        }
     }
 
     public static function setParameter($key, $value)
