@@ -57,10 +57,14 @@ class Asset extends \Twig_Extension implements ContainerAwareInterface
     public function getGlobals()
     {
         $webpath = $this->container->get('router')->getContext()->getBaseUrl();
-        $webpath = preg_replace('/app_dev\.php|app\.php/i', '', $webpath);
+        $pattern = '/app_dev\.php|app\.php/i';
 
-        if ($webpath[strlen($webpath) - 1] == '/') {
-            $webpath = substr($webpath, 0, -1);
+        if (preg_match($pattern, $webpath)) {
+            $webpath = preg_replace($pattern, '', $webpath);
+
+            if ($webpath[strlen($webpath) - 1] == '/') {
+                $webpath = substr($webpath, 0, -1);
+            }
         }
 
         Importer::setParameter('web', $webpath);
