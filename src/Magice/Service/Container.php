@@ -45,7 +45,7 @@ namespace Magice\Service {
             $this->container = $container;
 
             // copy services parameters
-            $this->parameters = $this->parameters();
+            $this->parameters = $this->getParameters();
 
             // setup service resolver
             Resolver::setupContainer($this);
@@ -82,7 +82,7 @@ namespace Magice\Service {
          * @return array
          * @see http://symfony.com/doc/current/cookbook/bundles/extension.html#parsing-the-configs-array
          */
-        function parameters()
+        function getParameters()
         {
             return $this->container->getParameterBag()->all();
         }

@@ -1,7 +1,6 @@
 <?php
 namespace Magice\Bundle\AssetBundle\Twig\TokenParser;
 
-use Magice\Asset\Importer;
 use Twig_TokenParser;
 use Twig_Token;
 

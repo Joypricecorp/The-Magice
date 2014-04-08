@@ -70,13 +70,19 @@ namespace Magice\Utils {
 
         public static function toAttrs(array $array)
         {
-            return join(' ', array_map(function ($sKey) use ($array) {
-                if (is_bool($array[$sKey])) {
-                    return $array[$sKey] ? $sKey : '';
-                }
+            return join(
+                ' ',
+                array_map(
+                    function ($sKey) use ($array) {
+                        if (is_bool($array[$sKey])) {
+                            return $array[$sKey] ? $sKey : '';
+                        }
 
-                return $sKey . '="' . $array[$sKey] . '"';
-            }, array_keys($array)));
+                        return $sKey . '="' . $array[$sKey] . '"';
+                    },
+                    array_keys($array)
+                )
+            );
         }
 
         public static function fromTag($tag)
@@ -92,6 +98,15 @@ namespace Magice\Utils {
             }
 
             return $attrs;
+        }
+
+        public static function insert($newElement, $toArray, $index)
+        {
+            $start   = array_slice($toArray, 0, $index);
+            $end     = array_slice($toArray, $index);
+            $start[] = $newElement;
+
+            return array_merge($start, $end);
         }
     }
 }
