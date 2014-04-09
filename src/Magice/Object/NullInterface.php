@@ -3,5 +3,5 @@ namespace Magice\Object;
 
 interface NullInterface
 {
-    public function isNullObject();
+    public static function isNullObject();
 }

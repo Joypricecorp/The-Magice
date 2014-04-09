@@ -6,7 +6,7 @@ abstract class NullAbstract implements NullInterface
     /**
      * @return bool
      */
-    public function isNullObject()
+    public static function isNullObject()
     {
         return true;
     }
