@@ -1,7 +1,7 @@
 <?php
 namespace Magice\Object;
 
-abstract class NullAbastract implements NullInterface
+abstract class NullAbstract implements NullInterface
 {
     /**
      * @return static
