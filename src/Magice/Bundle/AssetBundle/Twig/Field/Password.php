@@ -16,7 +16,7 @@ class Password extends Text
     {
         // BUG with chrome
         // TODO: use jquery-reveal password plugin
-        return 'text';
+        return 'text-password';
     }
 
     public static function getField(Form $form, FormView $f)

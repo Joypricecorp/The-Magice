@@ -58,11 +58,17 @@ class Text implements FieldInterface
             unset($r->attr['placeholder']);
         }
 
+        $auto = 'on';
+        if (($type = static::getType()) == 'text-password') {
+            $type = 'text';
+            $auto = 'off';
+        }
+
         return $form->tpl(
             '<div{attr}>',
             '   <label{label_attr}>{label}{separator}</label>',
             '   <div class="ui left labeled input{pre_icon_flag}">',
-            '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}"{size}{read_only}{required}{disabled}>',
+            '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}" autocomplete="{autocomplete}"{size}{read_only}{required}{disabled}>',
             '       {pre_icon_tag}',
             '       {asterisk}',
             '       {errors}',
@@ -82,7 +88,8 @@ class Text implements FieldInterface
                 'disabled'      => $form->isAttr($r, 'disabled'),
                 // if render form widget attr will apply to cover tag
                 'attr'          => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error', $opts)),
-                'type'          => static::getType(),
+                'type'          => $type,
+                'autocomplete'  => $auto,
                 'pre_icon_flag' => $pre_icon_flag,
                 'pre_icon_tag'  => $pre_icon_tag,
                 'asterisk'      => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : '',
