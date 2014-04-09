@@ -4,6 +4,14 @@ namespace Magice\Object;
 abstract class NullAbstract implements NullInterface
 {
     /**
+     * @return bool
+     */
+    public function isNullObject()
+    {
+        return true;
+    }
+
+    /**
      * @return static
      */
     public static function create()
