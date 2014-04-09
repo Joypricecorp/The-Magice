@@ -20,9 +20,12 @@ abstract class NullAbstract implements NullInterface
     }
 
     /**
+     * @param $name
+     * @param $arg
+     *
      * @return null
      */
-    public function __call()
+    public function __call($name, $arg)
     {
         return null;
     }
