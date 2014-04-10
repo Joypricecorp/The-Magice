@@ -191,7 +191,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         }
 
         // https://github.com/misd-service-development/phone-number-bundle
-        if (($r->type == 'tel') || $r->block_prefixes[2] == 'tel') {
+        if ((isset($r->type) && $r->type == 'tel') || $r->block_prefixes[2] == 'tel') {
             return $this->ui_form_tel($form, $attr, $opts);
         }
 
