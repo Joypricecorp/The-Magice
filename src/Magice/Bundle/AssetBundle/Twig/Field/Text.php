@@ -52,9 +52,8 @@ class Text implements FieldInterface
             $errors .= '</ul>';
         }
 
-        $label = $r->label;
         if (isset($r->attr['label'])) {
-            $label = $r->attr['label'];
+            $r->label = $r->attr['label'];
             unset($r->attr['label']);
         }
 
@@ -84,7 +83,7 @@ class Text implements FieldInterface
                 'id'            => $r->id,
                 'name'          => $r->full_name,
                 'value'         => $r->value,
-                'label'         => $label,
+                'label'         => $r->label,
                 'label_attr'    => $form->getAttrs($r->label_attr),
                 'placeholder'   => $placeholder ? : '',
                 'separator'     => $form->labelSeparator,
