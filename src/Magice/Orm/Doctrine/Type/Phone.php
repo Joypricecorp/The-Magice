@@ -1,7 +1,19 @@
 <?php
 namespace Magice\Orm\Doctrine\Type;
 
-use libphonenumber\PhoneNumber;
+use Misd\PhoneNumberBundle\Doctrine\DBAL\Types\PhoneNumberType;
 
-class Phone extends PhoneNumber {
+class Phone extends PhoneNumberType {
+    /**
+     * Phone number type name.
+     */
+    const NAME = 'phone';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return self::NAME;
+    }
 }

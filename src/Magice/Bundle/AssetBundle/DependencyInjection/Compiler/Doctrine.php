@@ -21,8 +21,8 @@ class Doctrine implements CompilerPassInterface
             $key,
             array_merge(
                 array(
-                    'phone_number' => array(
-                        'class'     => 'Misd\PhoneNumberBundle\Doctrine\DBAL\Types\PhoneNumberType',
+                    'phone' => array(
+                        'class'     => 'Magice\Orm\Doctrine\Type\Phone',
                         'commented' => true
                     )
                 ),

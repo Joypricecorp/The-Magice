@@ -23,6 +23,7 @@ class MagiceAssetBundle extends Bundle
 
     public function build(ContainerBuilder $bd)
     {
+        $bd->addCompilerPass(new Compiler\Form());
         $bd->addCompilerPass(new Compiler\Doctrine());
     }
 }
