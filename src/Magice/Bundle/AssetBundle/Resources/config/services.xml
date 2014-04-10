@@ -10,7 +10,7 @@
 
     <services>
         <service id="jp_asset.form.validator.phone" class="%jp_asset.form.validator.phone.class%">
-	        <tag name="validator.constraint_validator" alias="phone"/>
+	        <tag name="validator.constraint_validator" alias="Phone"/>
         </service>
     </services>
 </container>
