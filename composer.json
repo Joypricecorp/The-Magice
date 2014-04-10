@@ -13,7 +13,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.5",
-        "misd/phone-number-bundle": "~1.0"
+        "misd/phone-number-bundle": "~1.0",
+        "liil/kint": "dev-master"
     },
     "autoload": {
         "psr-0": {
