@@ -15,7 +15,7 @@ use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumber;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
-use Magice\Orm\Doctrine\Type\PhoneNull;
+use Magice\Object\NullInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -57,7 +57,7 @@ class PhoneNumberToStringTransformer implements DataTransformerInterface
      */
     public function transform($phoneNumber)
     {
-        if (null === $phoneNumber || $phoneNumber instanceof PhoneNull) {
+        if (null === $phoneNumber || $phoneNumber instanceof NullInterface) {
             return '';
         } elseif (false === $phoneNumber instanceof PhoneNumber) {
             return $phoneNumber;
