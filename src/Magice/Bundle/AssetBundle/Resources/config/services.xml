@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
+    <!--<parameters>
         <parameter key="jp_asset.form.type.tel.class">Magice\Form\Type\TelType</parameter>
     </parameters>
 
@@ -12,5 +12,5 @@
         <service id="jp_asset.form.type.tel" class="%jp_asset.form.type.tel.class%">
 	        <tag name="form.type" alias="tel"/>
         </service>
-    </services>
+    </services>-->
 </container>
