@@ -5,7 +5,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-class PhoneValidator extends ConstraintValidator
+class ZipCodeValidator extends ConstraintValidator
 {
     /*
         * Very simple validation logic to test german zip codes,
