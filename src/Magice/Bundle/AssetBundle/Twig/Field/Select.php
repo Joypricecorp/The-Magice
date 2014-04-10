@@ -142,6 +142,7 @@ class Select implements FieldInterface
         $choices = implode("\n", $choices);
 
         // TODO: support multiple
+        // TODO: change attr['label'] & attr['placeholder'] like TextField
         return $form->tpl(
             '   <div {attr}>',
             '       {empty_value}',

@@ -18,6 +18,8 @@ class Error implements \Countable
      */
     private $form;
 
+    private static $allErrors;
+
     /**
      * @param ContainerInterface     $container
      * @param FormInterface|FormView $form
@@ -35,13 +37,17 @@ class Error implements \Countable
      */
     public function all($form = null)
     {
+        if (static::$allErrors) {
+            return static::$allErrors;
+        }
+
         $form = $form ? : $this->form;
 
         if (empty($form)) {
             return array();
         }
 
-        return array_merge($this->getFormErrors($form), $this->getFieldErrors($form));
+        return self::$allErrors = array_merge($this->getFormErrors($form), $this->getFieldErrors($form));
     }
 
     /**
@@ -152,7 +158,7 @@ class Error implements \Countable
          */
         foreach ($childs as $key => $child) {
 
-            if (!empty($child->children)) {
+            if (empty($child->vars['errors']) && !empty($child->children)) {
                 $errors = array_merge($errors, $this->getFieldErrors($child));
             } else {
                 if ($err = $this->getErrors($child)) {
