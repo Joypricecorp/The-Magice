@@ -4,17 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
     <parameters>
-        <parameter key="jp_asset.example.class">Magice\Bundle\AssetBundle\Example</parameter>
+        <parameter key="jp_asset.form.type.tel.class">Magice\Bundle\AssetBundle\Form\Type\TelType</parameter>
     </parameters>
 
     <services>
-        <service id="jp_asset.example" class="%jp_asset.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="jp_asset.form.type.tel" class="%jp_asset.form.type.tel.class%">
+	        <tag name="form.type" alias="tel"/>
         </service>
     </services>
-    -->
 </container>
