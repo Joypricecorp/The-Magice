@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="jp_asset.form.validator.phone.class">Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber</parameter>
+        <parameter key="jp_asset.form.validator.phone.class">Magice\Validator\Constraints\Phone</parameter>
     </parameters>
 
     <services>
