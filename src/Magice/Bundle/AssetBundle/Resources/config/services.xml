@@ -10,8 +10,11 @@
     </parameters>
 
     <services>
-        <service id="jp_asset.form.validator.phone" class="%jp_asset.form.validator.zipcode.class%">
-	        <tag name="validator.constraint_validator" alias="ZipCode"/>
+        <service id="jp_asset.form.validator.phone" class="%jp_asset.form.validator.phone.class%">
+	        <tag name="validator.constraint_validator" alias="Phone"/>
         </service>
+	    <service id="jp_asset.form.validator.zipcode" class="%jp_asset.form.validator.zipcode.class%">
+		    <tag name="validator.constraint_validator" alias="ZipCode"/>
+	    </service>
     </services>
 </container>
