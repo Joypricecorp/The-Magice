@@ -6,11 +6,12 @@
 
     <parameters>
         <parameter key="jp_asset.form.validator.phone.class">Magice\Validator\Constraints\Phone</parameter>
+        <parameter key="jp_asset.form.validator.zipcode.class">Magice\Validator\Constraints\ZipCode</parameter>
     </parameters>
 
     <services>
-        <service id="jp_asset.form.validator.phone" class="%jp_asset.form.validator.phone.class%">
-	        <tag name="validator.constraint_validator" alias="Phone"/>
+        <service id="jp_asset.form.validator.phone" class="%jp_asset.form.validator.zipcode.class%">
+	        <tag name="validator.constraint_validator" alias="ZipCode"/>
         </service>
     </services>
 </container>
