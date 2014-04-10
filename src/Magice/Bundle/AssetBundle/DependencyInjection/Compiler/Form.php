@@ -15,7 +15,9 @@ class Form implements CompilerPassInterface
      */
     public function process(ContainerBuilder $bd)
     {
-        $bd->getDefinition('misd_phone_number.form.type')
-            ->setClass('Magice\Form\Type\Phone');
+        $bd->setDefinition(
+            'jp_asset.form.type.phone',
+            'Magice\Form\Type\Phone'
+        )->addTag('form.type', 'phone');
     }
 }
