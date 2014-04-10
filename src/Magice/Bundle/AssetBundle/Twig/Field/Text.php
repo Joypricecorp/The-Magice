@@ -52,11 +52,6 @@ class Text implements FieldInterface
             $errors .= '</ul>';
         }
 
-        if (isset($r->attr['label'])) {
-            $r->label = $r->attr['label'];
-            unset($r->attr['label']);
-        }
-
         $placeholder = $r->label;
         if (isset($r->attr['placeholder'])) {
             $placeholder = $r->attr['placeholder'];

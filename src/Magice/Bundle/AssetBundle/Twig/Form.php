@@ -137,6 +137,12 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     protected function getField($type, FormView $form, $attr = array(), $opts = array())
     {
         if (!empty($attr)) {
+
+            if (isset($attr['label'])) {
+                $form->vars['label'] = $attr['label'];
+                unset($attr['label']);
+            }
+
             $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
         }
 
@@ -228,7 +234,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
 
     public function ui_form_tel(FormView $form, $attr = array(), $opts = array())
     {
-        if(empty($attr['pattern'])) {
+        if (empty($attr['pattern'])) {
             $attr['pattern'] = '[0-9]{10}';
         }
 
