@@ -4,4 +4,13 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="jp_asset.form.type.phone.class">Magice\Form\Type\Phone</parameter>
+    </parameters>
+
+    <services>
+	    <service id="jp_asset.form.type.phone" class="%jp_asset.form.type.phone.class%">
+		    <tag name="form.type" alias="phone"/>
+	    </service>
+    </services>
 </container>
