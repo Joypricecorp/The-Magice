@@ -22,7 +22,7 @@ class Doctrine implements CompilerPassInterface
             array_merge(
                 array(
                     'phone' => array(
-                        'class'     => 'Magice\Orm\Doctrine\Type\Phone',
+                        'class'     => 'Magice\Orm\Doctrine\Types\Phone\Type',
                         'commented' => true
                     )
                 ),
