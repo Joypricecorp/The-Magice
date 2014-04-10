@@ -24,6 +24,8 @@ abstract class Type extends AbstractType
             (!isset($options['error_mapping']))
             && (isset($options['data_class']) && ($class = $options['data_class']))
         ) {
+            // if you are named form's fields not eque with table's fields (entity,class data)
+            // this will help you auto mapping fields between class and form
             foreach ((new \ReflectionClass($class))->getProperties() as $p) {
                 $maps[$p->getName()] = String::underscore($p->getName());
             }
