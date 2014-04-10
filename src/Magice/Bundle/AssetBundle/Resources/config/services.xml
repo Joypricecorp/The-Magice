@@ -5,8 +5,8 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="jp_asset.form.validator.phone.class">Magice\Validator\Constraints\Phone</parameter>
-        <parameter key="jp_asset.form.validator.zipcode.class">Magice\Validator\Constraints\ZipCode</parameter>
+        <parameter key="jp_asset.form.validator.phone.class">Magice\Validator\Constraints\PhoneValidator</parameter>
+        <parameter key="jp_asset.form.validator.zipcode.class">Magice\Validator\Constraints\ZipCodeValidator</parameter>
     </parameters>
 
     <services>
