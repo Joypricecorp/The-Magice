@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormView;
 use Magice\Bundle\AssetBundle\Twig\Form;
 use Magice\Bundle\AssetBundle\Twig\FieldInterface;
 
-class Url extends Text
+class Tel extends Text
 {
     public static function getType()
     {

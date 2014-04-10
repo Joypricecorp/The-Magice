@@ -63,6 +63,12 @@ class Text implements FieldInterface
             unset($r->attr['placeholder']);
         }
 
+        $pattern = null;
+        if (isset($r->attr['pattern'])) {
+            $pattern = ' pattern="' . $r->attr['pattern'] . '"';
+            unset($r->attr['pattern']);
+        }
+
         $auto = 'on';
         if (($type = static::getType()) == 'text-password') {
             $type = 'text';
@@ -73,7 +79,7 @@ class Text implements FieldInterface
             '<div{attr}>',
             '   <label{label_attr}>{label}{separator}</label>',
             '   <div class="ui left labeled input{pre_icon_flag}">',
-            '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}" autocomplete="{autocomplete}"{size}{read_only}{required}{disabled}>',
+            '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}" autocomplete="{autocomplete}"{size}{read_only}{required}{disabled}{pattern}>',
             '       {pre_icon_tag}',
             '       {asterisk}',
             '       {errors}',
@@ -95,6 +101,7 @@ class Text implements FieldInterface
                 'attr'          => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error', $opts)),
                 'type'          => $type,
                 'autocomplete'  => $auto,
+                'pattern'       => $pattern,
                 'pre_icon_flag' => $pre_icon_flag,
                 'pre_icon_tag'  => $pre_icon_tag,
                 'asterisk'      => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : '',

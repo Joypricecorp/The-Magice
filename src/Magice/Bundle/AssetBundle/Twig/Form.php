@@ -184,6 +184,10 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             return $this->ui_form_number($form, $attr, $opts);
         }
 
+        if ($r->block_prefixes[2] == 'tel') {
+            return $this->ui_form_tel($form, $attr, $opts);
+        }
+
         return $this->getField('Text', $form, $attr, $opts);
     }
 
@@ -220,6 +224,15 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     public function ui_form_password(FormView $form, $attr = array(), $opts = array())
     {
         return $this->getField('Password', $form, $attr, $opts);
+    }
+
+    public function ui_form_tel(FormView $form, $attr = array(), $opts = array())
+    {
+        if(empty($attr['pattern'])) {
+            $attr['pattern'] = '[0-9]{10}';
+        }
+
+        return $this->getField('Tel', $form, $attr, $opts);
     }
 
     public function ui_form_passwords(FormView $form, $attr = array(), $opts = array())
