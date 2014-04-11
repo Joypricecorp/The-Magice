@@ -18,12 +18,17 @@ class Select implements FieldInterface
         return 'select';
     }
 
-    protected static function renderSelection(Form $form, &$choices, $items, $r, &$selected)
+    protected static function renderSelection(Form $form, &$choices, $items, $r, &$selected, $isYear)
     {
         /**
          * @var ChoiceView $ch
          */
         foreach ($items as $ch) {
+
+            if ($isYear && $form->locale() == 'th') {
+                $ch->label = (int) $ch->label + 543;
+            }
+
             $choices[] = sprintf(
                 '<div class="item" data-value="%s">%s</div>',
                 $ch->value,
@@ -79,7 +84,7 @@ class Select implements FieldInterface
         );
     }
 
-    public static function getSelect(Form $form, FormView $f, $includeAttr = true)
+    public static function getSelect(Form $form, FormView $f, $includeAttr = true, $isYear = false)
     {
         $f->setRendered(true);
 
@@ -123,11 +128,11 @@ class Select implements FieldInterface
 
         $choices = array();
         if (!empty($r->preferred_choices)) {
-            self::renderSelection($form, $choices, $r->preferred_choices, $r, $empty_value);
+            self::renderSelection($form, $choices, $r->preferred_choices, $r, $empty_value, $isYear);
         }
 
         if (!empty($r->choices)) {
-            self::renderSelection($form, $choices, $r->choices, $r, $empty_value);
+            self::renderSelection($form, $choices, $r->choices, $r, $empty_value, $isYear);
         }
 
         if (empty($empty_value) && !empty($choices)) {

@@ -3,7 +3,7 @@ namespace Magice\Exception {
 
     //use Magice\Serviced\Param;
 
-    class Exception extends \Exception
+    class Exception extends \Exception implements \JsonSerializable
     {
         protected $messageUser;
         protected $messageDebug;
@@ -91,6 +91,18 @@ namespace Magice\Exception {
             $msg = call_user_func_array('sprintf', func_get_args());
 
             return new static($msg, 0, null);
+        }
+
+        /**
+         * (PHP 5 &gt;= 5.4.0)<br/>
+         * Specify data which should be serialized to JSON
+         * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+         * @return mixed data which can be serialized by <b>json_encode</b>,
+         * which is a value of any type other than a resource.
+         */
+        public function jsonSerialize()
+        {
+            return array('code' => $this->getCode(), 'message' => $this->getMessage());
         }
     }
 }

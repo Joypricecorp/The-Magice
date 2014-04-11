@@ -49,7 +49,6 @@ class DateSelect implements FieldInterface
         $month = $f->children['month'];
         $year  = $f->children['year'];
 
-
         return $form->tpl(
             '<div{attr}>',
             '   <label{label_attr}>{label}{separator}</label>',
@@ -65,7 +64,7 @@ class DateSelect implements FieldInterface
                 'attr'       => $attr,
                 'day'        => Select::getSelect($form, $day),
                 'month'      => Select::getSelect($form, $month),
-                'year'       => Select::getSelect($form, $year),
+                'year'       => Select::getSelect($form, $year, true, true),
                 'errors'     => $errors
             )
         );

@@ -86,6 +86,10 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         return $this->container->get('translator')->trans($msg, array(), $domain);
     }
 
+    public function locale() {
+        return $this->container->getParameter('locale');
+    }
+
     public function isAttr($r, $attr, $html5 = true)
     {
         $value = $r->$attr;
