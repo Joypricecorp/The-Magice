@@ -239,10 +239,6 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
 
     public function ui_form_tel(FormView $form, $attr = array(), $opts = array())
     {
-        if (empty($attr['pattern'])) {
-            $attr['pattern'] = '[0-9]{10}';
-        }
-
         return $this->getField('Tel', $form, $attr, $opts);
     }
 
