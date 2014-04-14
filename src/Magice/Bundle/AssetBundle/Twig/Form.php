@@ -87,7 +87,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         return $this->container->get('translator')->trans($msg, array(), $domain);
     }
 
-    public function locale() {
+    public function locale()
+    {
         return $this->container->getParameter('locale');
     }
 
@@ -143,9 +144,12 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     {
         if (!empty($attr)) {
 
+            // if config label from view you must translate it before with xxx|trans
             if (isset($attr['label'])) {
                 $form->vars['label'] = $attr['label'];
                 unset($attr['label']);
+            } else {
+                $form->vars['label'] = $this->trans($form->vars['label'], $form->vars['translation_domain']);
             }
 
             $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
