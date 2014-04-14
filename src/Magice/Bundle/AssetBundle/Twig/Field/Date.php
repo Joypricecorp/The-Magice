@@ -28,6 +28,7 @@ class Date implements FieldInterface
             '   <label{label_attr}>{label}{separator}</label>',
             '   <div class="ui left labeled input">',
             '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}"',
+            '           ng-model="{ng_data_prefix}{id}" ng-init="{ng_data_prefix}{id}=\'{value}\'"',
             '           {size}{read_only}{required}{disabled}',
             '       >',
             '       {asterisk}',
@@ -35,23 +36,24 @@ class Date implements FieldInterface
             '   </div>',
             '</div>',
             array(
-                'id'          => $r->id,
-                'name'        => $r->full_name,
-                'value'       => $r->value,
-                'label'       => $form->trans($r->label, $r->translation_domain),
-                'label_attr'  => $form->getAttrs($r->label_attr),
-                'placeholder' => $form->trans($r->label, $r->translation_domain),
-                'separator'   => $form->labelSeparator,
-                'size'        => $form->isAttr($r, 'size', false),
-                'read_only'   => $form->isAttr($r, 'read_only'),
-                'required'    => $form->isAttr($r, 'required'),
-                'disabled'    => $form->isAttr($r, 'disabled'),
+                'id'             => $r->id,
+                'name'           => $r->full_name,
+                'value'          => $r->value,
+                'ng_data_prefix' => $form::$ngModelDataPrefix,
+                'label'          => $form->trans($r->label, $r->translation_domain),
+                'label_attr'     => $form->getAttrs($r->label_attr),
+                'placeholder'    => $form->trans($r->label, $r->translation_domain),
+                'separator'      => $form->labelSeparator,
+                'size'           => $form->isAttr($r, 'size', false),
+                'read_only'      => $form->isAttr($r, 'read_only'),
+                'required'       => $form->isAttr($r, 'required'),
+                'disabled'       => $form->isAttr($r, 'disabled'),
                 // if render form widget attr will apply to cover tag
-                'attr'        => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error')),
+                'attr'           => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error')),
                 // TODO: add date picker and don't use type date to prevent chrome native datepicker
                 // TODO: here http://amsul.ca/pickadate.js/
-                'type'        => 'text',
-                'asterisk'    => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : ''
+                'type'           => 'text',
+                'asterisk'       => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : ''
             )
         );
     }

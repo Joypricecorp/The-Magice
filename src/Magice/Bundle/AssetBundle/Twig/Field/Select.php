@@ -153,21 +153,22 @@ class Select implements FieldInterface
             '       {empty_value}',
             '       <i class="dropdown icon"></i>',
             '       {asterisk}',
-            '       <input name="{name}" id="{id}" type="hidden" value="{value}">',
+            '       <input name="{name}" id="{id}" type="hidden" value="{value}" ng-model="{ng_data_prefix}{id}" ng-init="{ng_data_prefix}{id}=\'{value}\'">',
             '       <div class="menu">',
             '           {empty_item}',
             '           {choices}',
             '       </div>',
             '   </div>',
             array(
-                'value'       => $r->value,
-                'id'          => $r->id,
-                'name'        => $r->full_name,
-                'empty_value' => $empty_value,
-                'empty_item'  => $empty_item,
-                'choices'     => $choices,
-                'attr'        => $attr,
-                'asterisk'    => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : ''
+                'value'          => $r->value,
+                'id'             => $r->id,
+                'ng_data_prefix' => $form::$ngModelDataPrefix,
+                'name'           => $r->full_name,
+                'empty_value'    => $empty_value,
+                'empty_item'     => $empty_item,
+                'choices'        => $choices,
+                'attr'           => $attr,
+                'asterisk'       => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : ''
             )
         );
     }

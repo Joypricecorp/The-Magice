@@ -20,6 +20,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     public $scriptDeclared = [];
     public $error = false;
     public $warning = false;
+    public $ngModelDataPrefix = 'data.';
 
     /**
      * @var Container
