@@ -19,30 +19,31 @@ class Button implements FieldInterface
         return static::$type;
     }
 
-    public static function getField(Form $form, FormView $f)
+    public static function getField(Form $form, FormView $formView)
     {
-        $f->setRendered(true);
-        $r = (object) $f->vars;
+        $formView->setRendered(true);
+        $r = (object) $formView->vars;
 
         $icon = '';
         $cls  = array();
 
-        self::$type = $r->_opts['type'];
+        self::$type = $r->attr['type'];
 
-        if (!empty($r->_opts['labeled'])) {
+        if (!empty($r->attr['o:labeled'])) {
             $cls[] = 'labeled';
-            if (isset($r->_opts['labeled']['right'])) {
-                $cls[] = 'right';
-            }
+            $cls[] = $r->attr['o:labeled']; // left,right is values
+            unset($r->attr['o:labeled']);
         }
 
-        if (!empty($r->_opts['icon'])) {
+        if (!empty($r->attr['o:icon'])) {
             $cls[] = 'icon';
-            $icon  = sprintf('<i class="%s icon"></i>', $r->_opts['icon']);
+            $icon  = sprintf('<i class="%s icon"></i>', $r->attr['o:icon']);
+            unset($r->attr['o:icon']);
         }
 
-        if (!empty($r->_opts['style'])) {
-            $cls[] = $r->_opts['style'];
+        if (!empty($r->attr['o:style'])) {
+            $cls[] = $r->attr['o:style'];
+            unset($r->attr['o:style']);
         }
 
         if ($r->disabled) {
@@ -57,11 +58,11 @@ class Button implements FieldInterface
                 'attr'  => $form->getAttrs(
                         $r->attr,
                         array(
-                            'class'    => 'ui button',
-                            'id'       => $r->id,
-                            'name'     => $r->full_name,
-                            'value'    => $r->value,
-                            'type'     => static::getType()
+                            'class' => 'ui button',
+                            'id'    => $r->id,
+                            'name'  => $r->full_name,
+                            'value' => $r->value,
+                            'type'  => static::getType()
                         ),
                         $cls
                     ),

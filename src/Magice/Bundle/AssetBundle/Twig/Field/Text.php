@@ -6,6 +6,7 @@
 
 namespace Magice\Bundle\AssetBundle\Twig\Field;
 
+use Magice\Utils\Arrays;
 use Symfony\Component\Form\FormView;
 use Magice\Bundle\AssetBundle\Twig\Form;
 use Magice\Bundle\AssetBundle\Twig\FieldInterface;
@@ -17,92 +18,55 @@ class Text implements FieldInterface
         return 'text';
     }
 
-    public static function getField(Form $form, FormView $f)
+    public static function getField(Form $form, FormView $formView)
     {
-        $f->setRendered(true);
-
-        $r = (object) $f->vars;
-
-        $opts          = '';
-        $pre_icon_flag = '';
-        $pre_icon_tag  = '';
-
-        if (!empty($r->_opts)) {
-            $opts = (array) $r->_opts;
-
-            if (isset($opts['icon'])) {
-                $pre_icon_flag = ' icon';
-                $pre_icon_tag  = sprintf('<i class="%s icon"></i>', $opts['icon']);
-                unset($opts['icon']);
-            }
-
-            $opts = ' ' . implode(' ', $opts);
-        }
+        $formView->setRendered();
 
         $errors = '';
-        if (!$form->fieldErrorMsgDisabled && !empty($r->errors)) {
-            $r->valid = false;
-            $errors   = '<ul class="ui red pointing above ui label">';
+        if ($formView->vars['submitted'] && !$form->fieldErrorMsgDisabled && !empty($formView->vars['errors'])) {
+            $formView->vars['valid'] = false;
+
+            $errors = '<ul class="ui red pointing above ui label">';
+
             /**
              * @var \Symfony\Component\Form\FormError $e
              */
-            foreach ($r->errors as $e) {
+            foreach ($formView->vars['errors'] as $e) {
                 $errors .= sprintf('<li>%s</li>', $form->trans($e->getMessage(), 'validators'));
             }
+
             $errors .= '</ul>';
         }
 
-        $placeholder = $r->label;
-        if (isset($r->attr['placeholder'])) {
-            $placeholder = $r->attr['placeholder'];
-            unset($r->attr['placeholder']);
+        $attr = Attributes::create($form, $formView);
+
+        $type = $attr->input['type'] = static::getType();
+
+        if ($type === 'text-password') {
+            $attr->input['type'] = 'text';
         }
 
-        $pattern = null;
-        if (isset($r->attr['pattern'])) {
-            $pattern = ' pattern="' . $r->attr['pattern'] . '"';
-            unset($r->attr['pattern']);
-        }
-
-        $auto = 'on';
-        if (($type = static::getType()) == 'text-password') {
-            $type = 'text';
-            $auto = 'off';
-        }
-
-        return $form->tpl(
-            '<div{attr}>',
-            '   <label{label_attr}>{label}{separator}</label>',
-            '   <div class="ui left labeled input{pre_icon_flag}">',
-            '       <input id="{id}" name="{name}" placeholder="{placeholder}" type="{type}" value="{value}" autocomplete="{autocomplete}" ng-model="{ng_data_prefix}{id}" ng-init="{ng_data_prefix}{id}=\'{value}\'"{size}{read_only}{required}{disabled}{pattern}>',
-            '       {pre_icon_tag}',
-            '       {asterisk}',
+        $return = $form->tpl(
+            '<div {attr_cover}>',
+            '   <label {attr_label}>{label}{separator}</label>',
+            '   <div {attr_field}>',
+            '       <input {attr_input}>',
+            '       {options}',
             '       {errors}',
             '   </div>',
             '</div>',
             array(
-                'id'             => $r->id,
-                'name'           => $r->full_name,
-                'value'          => $r->value,
-                'label'          => $r->label,
-                'ng_data_prefix' => $form::$ngModelDataPrefix,
-                'label_attr'     => $form->getAttrs($r->label_attr),
-                'placeholder'    => $placeholder ? : '',
-                'separator'      => $form->labelSeparator,
-                'size'           => $form->isAttr($r, 'size', false),
-                'read_only'      => $form->isAttr($r, 'read_only'),
-                'required'       => $form->isAttr($r, 'required'),
-                'disabled'       => $form->isAttr($r, 'disabled'),
-                // if render form widget attr will apply to cover tag
-                'attr'           => $form->getAttrs($r->attr, array('class' => 'field'), array($r->valid ? null : 'error', $opts)),
-                'type'           => $type,
-                'autocomplete'   => $auto,
-                'pattern'        => $pattern,
-                'pre_icon_flag'  => $pre_icon_flag,
-                'pre_icon_tag'   => $pre_icon_tag,
-                'asterisk'       => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : '',
-                'errors'         => $errors
+                'label'      => $formView->vars['label'],
+                'separator'  => $form->labelSeparator,
+                'attr_cover' => Arrays::toAttrs($attr->cover),
+                'attr_label' => Arrays::toAttrs($attr->label),
+                'attr_field' => Arrays::toAttrs($attr->field),
+                'attr_input' => Arrays::toAttrs($attr->input),
+                'options'    => implode("\n", $attr->option),
+                'errors'     => $errors
             )
         );
+
+        return $return;
     }
 }

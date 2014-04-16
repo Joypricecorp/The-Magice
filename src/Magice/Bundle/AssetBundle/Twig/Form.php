@@ -6,12 +6,13 @@
 
 namespace Magice\Bundle\AssetBundle\Twig;
 
-use Magice\Form\Error;
+use Magice\Form\ViewError;
 use Magice\Utils\Arrays;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\Form as SymForm;
 
 class Form extends \Twig_Extension implements ContainerAwareInterface
 {
@@ -20,7 +21,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     public $scriptDeclared = [];
     public $error = false;
     public $warning = false;
-    public static $ngModelDataPrefix = 'data.';
+    public $ngModelDataPrefix = '';
+    public $useNgModel = false;
 
     /**
      * @var Container
@@ -63,6 +65,9 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             new \Twig_SimpleFunction('ui_form_email', array($this, 'ui_form_email'), $self),
             new \Twig_SimpleFunction('ui_form_url', array($this, 'ui_form_url'), $self),
             new \Twig_SimpleFunction('ui_form_password', array($this, 'ui_form_password'), $self),
+            new \Twig_SimpleFunction('ui_form_hiddens', array($this, 'ui_form_hiddens'), $self),
+            new \Twig_SimpleFunction('ui_form_ng', array($this, 'ui_form_ng'), $self),
+            new \Twig_SimpleFunction('ui_form_name', array($this, 'ui_form_name'), $self),
         );
     }
 
@@ -135,12 +140,43 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         $this->labelSeparator = $str;
     }
 
+    /**
+     * @param string|bool $flag if string use for ngDataModelPrefix
+     */
+    public function ui_form_ng($flag)
+    {
+        $this->useNgModel = !!$flag;
+
+        if (is_string($flag)) {
+            $this->ngModelDataPrefix = $flag;
+        }
+    }
+
     public function ui_form_field_error_msg_disabled($flag)
     {
         $this->fieldErrorMsgDisabled = $flag;
     }
 
-    protected function getField($type, FormView $form, $attr = array(), $opts = array())
+    public function applyNgModel(FormView $formView, &$attrs)
+    {
+        if ($this->useNgModel) {
+            $name = $formView->vars['name'];
+
+            // password fields
+            if ($formView->vars['block_prefixes'][2] == 'password') {
+                $name = $formView->parent->vars['name'] . '.' . $name;
+            }
+
+            if ($this->ngModelDataPrefix) {
+                $name = $this->ngModelDataPrefix . '.' . $name;
+            }
+
+            $attrs['ng-model'] = $name;
+            $attrs['ng-init']  = $name . "='" . $formView->vars['value'] . "'";
+        }
+    }
+
+    protected function getField($type, FormView $form, $attr = array())
     {
         if (!empty($attr)) {
 
@@ -152,102 +188,154 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
                 $form->vars['label'] = $this->trans($form->vars['label'], $form->vars['translation_domain']);
             }
 
-            $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
-        }
+            // prevent build error on not submit
+            // fields due to ->valid status to indicate error
+            if (!$form->vars['submitted']) {
+                $form->vars['valid'] = true;
+            }
 
-        if (!empty($opts)) {
-            $form->vars['_opts'] = $opts;
+            $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
         }
 
         $class = sprintf('\Magice\Bundle\AssetBundle\Twig\Field\%s::getField', $type);
         return call_user_func_array($class, array($this, $form));
     }
 
-    public function ui_form_widget(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_widget(FormView $form, $attr = array())
     {
         $r = (object) $form->vars;
 
         if (isset($r->date_pattern)) {
-            return $this->ui_form_date_select($form, $attr, $opts);
+            return $this->ui_form_date_select($form, $attr);
         }
 
         if (isset($r->type) && $r->type == 'date') {
-            return $this->ui_form_date($form, $attr, $opts);
+            return $this->ui_form_date($form, $attr);
         }
 
         if (isset($r->expanded)) {
-            return $this->ui_form_select($form, $attr, $opts);
+            return $this->ui_form_select($form, $attr);
         }
 
         if ($r->block_prefixes[1] == 'repeated') {
-            return $this->ui_form_passwords($form, $attr, $opts);
+            return $this->ui_form_passwords($form, $attr);
         }
 
         if ($r->block_prefixes[1] == 'submit') {
-            return $this->ui_form_button($form, $attr, $opts, 'submit');
+            return $this->ui_form_button($form, $attr, 'submit');
         }
 
         if ($r->block_prefixes[1] == 'button') {
-            return $this->ui_form_button($form, $attr, $opts);
-        }
-
-        if (!empty($attr)) {
-            $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
+            return $this->ui_form_button($form, $attr);
         }
 
         if ($r->block_prefixes[1] == 'integer') {
-            return $this->ui_form_number($form, $attr, $opts);
+            return $this->ui_form_number($form, $attr);
+        }
+
+        if ($r->block_prefixes[2] == 'email') {
+            return $this->ui_form_email($form, $attr);
         }
 
         // https://github.com/misd-service-development/phone-number-bundle
         if ((isset($r->type) && $r->type == 'tel') || $r->block_prefixes[2] == 'tel') {
-            return $this->ui_form_tel($form, $attr, $opts);
+            return $this->ui_form_tel($form, $attr);
         }
 
-        return $this->getField('Text', $form, $attr, $opts);
+        return $this->getField('Text', $form, $attr);
     }
 
-    public function ui_form_select(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_select(FormView $form, $attr = array())
     {
-        return $this->getField('Select', $form, $attr, $opts);
+        return $this->getField('Select', $form, $attr);
     }
 
-    public function ui_form_date(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_hiddens(FormView $form)
     {
-        return $this->getField('Date', $form, $attr, $opts);
+        $str = '';
+        /**
+         * @var FormView $field
+         */
+        foreach ($form->children as $field) {
+            if (!$field->isRendered()) {
+                $str .= $this->ui_form_hidden($field);
+            }
+        }
+
+        return $str;
     }
 
-    public function ui_form_date_select(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_hidden(FormView $formView)
     {
-        return $this->getField('DateSelect', $form, $attr, $opts);
+        $formView->setRendered();
+
+        $attrs['id']    = $formView->vars['id'];
+        $attrs['name']  = $formView->vars['full_name'];
+        $attrs['value'] = $formView->vars['value'];
+
+        $this->applyNgModel($formView, $attrs);
+
+        return sprintf('<input type="hidden" %s>', Arrays::toAttrs($attrs));
     }
 
-    public function ui_form_email(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_name(FormView $formView)
     {
-        return $this->getField('Email', $form, $attr, $opts);
+        $attrs = array(
+            'id'    => 'sf_form_name',
+            'name'  => 'sf_form_name',
+            'value' => $formView->vars['name']
+        );
+
+        if ($this->useNgModel) {
+            $name = 'sf_form_name';
+
+            if ($this->ngModelDataPrefix) {
+                $name = $this->ngModelDataPrefix . '.' . $name;
+            }
+
+            $attrs['ng-name'] = $name;
+            $attrs['ng-init'] = $name . "='" . $attrs['value'] . "'";;
+        }
+
+        return sprintf('<input type="hidden" %s>', Arrays::toAttrs($attrs));
     }
 
-    public function ui_form_number(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_date(FormView $form, $attr = array())
     {
-        return $this->getField('Number', $form, $attr, $opts);
+        return $this->getField('Date', $form, $attr);
     }
 
-    public function ui_form_url(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_date_select(FormView $form, $attr = array())
     {
-        return $this->getField('Url', $form, $attr, $opts);
+        return $this->getField('DateSelect', $form, $attr);
     }
 
-    public function ui_form_password(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_email(FormView $form, $attr = array())
     {
-        return $this->getField('Password', $form, $attr, $opts);
+        return $this->getField('Email', $form, $attr);
     }
 
-    public function ui_form_tel(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_number(FormView $form, $attr = array())
     {
-        return $this->getField('Tel', $form, $attr, $opts);
+        return $this->getField('Number', $form, $attr);
     }
 
-    public function ui_form_passwords(FormView $form, $attr = array(), $opts = array())
+    public function ui_form_url(FormView $form, $attr = array())
+    {
+        return $this->getField('Url', $form, $attr);
+    }
+
+    public function ui_form_password(FormView $form, $attr = array())
+    {
+        return $this->getField('Password', $form, $attr);
+    }
+
+    public function ui_form_tel(FormView $form, $attr = array())
+    {
+        return $this->getField('Tel', $form, $attr);
+    }
+
+    public function ui_form_passwords(FormView $form, $attr = array())
     {
         $first  = $form->children['first'];
         $second = $form->children['second'];
@@ -264,27 +352,22 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         $second->vars['valid'] = $form->vars['valid'];
 
         return
-            $this->ui_form_password($first, $attr1, $opts)
-            . $this->ui_form_password($second, $attr2, $opts);
+            $this->ui_form_password($first, $attr1)
+            . $this->ui_form_password($second, $attr2);
     }
 
-    public function ui_form_button(FormView $form, $attr = array(), $opts = array(), $type = 'button')
+    public function ui_form_button(FormView $form, $attr = array(), $type = 'button')
     {
-        $opts['type'] = $type;
+        $attr['type'] = $type;
 
         if (is_string($attr)) {
-            $opts['style'] = $attr;
-            $attr          = array();
+            $attr = array('o:style' => $attr);
         }
 
-        if (!empty($attr)) {
-            $form->vars['attr'] = array_replace($form->vars['attr'], $attr);
-        }
-
-        return $this->getField('Button', $form, $attr, $opts);
+        return $this->getField('Button', $form, $attr);
     }
 
-    public function ui_form_errors(FormView $form, array $otherError = null)
+    public function ui_form_errors($form, array $otherError = null)
     {
         // by default if call global form error
         // we will disabled field error message level
@@ -295,7 +378,6 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         $t   = $this->container->get('translator');
 
         if (!empty($otherError)) {
-
 
             foreach ($otherError as $err) {
 
@@ -330,7 +412,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             }
         }
 
-        $error = new Error($this->container, $form);
+        $error = new ViewError($this->container, $form);
         $warn  = count($error);
 
         if ($warn || !empty($msg)) {

@@ -24,7 +24,7 @@ class DateSelect implements FieldInterface
         $r = (object) $f->vars;
 
         $errors = '';
-        if (!$form->fieldErrorMsgDisabled && !empty($r->errors)) {
+        if ($r->submitted && !$form->fieldErrorMsgDisabled && !empty($r->errors)) {
             $r->valid = false;
             $errors   = '<ul class="ui red pointing above ui label">';
             /**
