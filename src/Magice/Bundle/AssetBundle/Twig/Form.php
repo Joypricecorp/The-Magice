@@ -67,7 +67,6 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             new \Twig_SimpleFunction('ui_form_password', array($this, 'ui_form_password'), $self),
             new \Twig_SimpleFunction('ui_form_hiddens', array($this, 'ui_form_hiddens'), $self),
             new \Twig_SimpleFunction('ui_form_ng', array($this, 'ui_form_ng'), $self),
-            new \Twig_SimpleFunction('ui_form_name', array($this, 'ui_form_name'), $self),
         );
     }
 
@@ -141,15 +140,18 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     }
 
     /**
-     * @param string|bool $flag if string use for ngDataModelPrefix
+     * @param FormView $formView
+     * @param string   $dataPrefix
+     *
+     * @return string
      */
-    public function ui_form_ng($flag)
+    public function ui_form_ng(FormView $formView, $dataPrefix = null)
     {
-        $this->useNgModel = !!$flag;
+        $this->useNgModel = true;
 
-        if (is_string($flag)) {
-            $this->ngModelDataPrefix = $flag;
-        }
+        $this->ngModelDataPrefix = $dataPrefix;
+
+        return sprintf('<span ng-model="$form.name" ng-init="$form.name=\'%s\'"></span>', $formView->vars['name']);
     }
 
     public function ui_form_field_error_msg_disabled($flag)
@@ -274,28 +276,6 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         $attrs['value'] = $formView->vars['value'];
 
         $this->applyNgModel($formView, $attrs);
-
-        return sprintf('<input type="hidden" %s>', Arrays::toAttrs($attrs));
-    }
-
-    public function ui_form_name(FormView $formView)
-    {
-        $attrs = array(
-            'id'    => 'sf_form_name',
-            'name'  => 'sf_form_name',
-            'value' => $formView->vars['name']
-        );
-
-        if ($this->useNgModel) {
-            $name = 'sf_form_name';
-
-            if ($this->ngModelDataPrefix) {
-                $name = $this->ngModelDataPrefix . '.' . $name;
-            }
-
-            $attrs['ng-name'] = $name;
-            $attrs['ng-init'] = $name . "='" . $attrs['value'] . "'";;
-        }
 
         return sprintf('<input type="hidden" %s>', Arrays::toAttrs($attrs));
     }
