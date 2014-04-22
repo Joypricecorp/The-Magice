@@ -23,6 +23,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     public $warning = false;
     public $ngModelDataPrefix = '';
     public $useNgModel = false;
+    public $uiFieldSize = null;
 
     /**
      * @var Container
@@ -67,6 +68,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             new \Twig_SimpleFunction('ui_form_password', array($this, 'ui_form_password'), $self),
             new \Twig_SimpleFunction('ui_form_hiddens', array($this, 'ui_form_hiddens'), $self),
             new \Twig_SimpleFunction('ui_form_ng', array($this, 'ui_form_ng'), $self),
+            new \Twig_SimpleFunction('ui_form_size', array($this, 'ui_form_size'), $self),
         );
     }
 
@@ -142,16 +144,31 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     /**
      * @param FormView $formView
      * @param string   $dataPrefix
+     * @param bool     $isChild
      *
-     * @return string
+     * @return string|null
      */
-    public function ui_form_ng(FormView $formView, $dataPrefix = null)
+    public function ui_form_ng(FormView $formView, $dataPrefix = null, $isChild = false)
     {
         $this->useNgModel = true;
 
         $this->ngModelDataPrefix = $dataPrefix;
 
+        if ($isChild) {
+            return null;
+        }
+
         return sprintf('<span ng-model="$form.name" ng-init="$form.name=\'%s\'"></span>', $formView->vars['name']);
+    }
+
+    /**
+     * @see http://semantic-ui.com/elements/input.html
+     *
+     * @param $size
+     */
+    public function ui_form_size($size)
+    {
+        $this->uiFieldSize = $size;
     }
 
     public function ui_form_field_error_msg_disabled($flag)
@@ -424,6 +441,27 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     public function ui_form_warning_error()
     {
         return trim(sprintf('%s %s', $this->error ? ' error' : '', $this->warning ? ' warning' : ''));
+    }
+
+    public function getFieldErrors(FormView $formView)
+    {
+        $errors = '';
+        if ($formView->vars['submitted'] && !$this->fieldErrorMsgDisabled && !empty($formView->vars['errors'])) {
+            $formView->vars['valid'] = false;
+
+            $errors = '<ul class="ui red pointing above ui label">';
+
+            /**
+             * @var \Symfony\Component\Form\FormError $e
+             */
+            foreach ($formView->vars['errors'] as $e) {
+                $errors .= sprintf('<li>%s</li>', $this->trans($e->getMessage(), 'validators'));
+            }
+
+            $errors .= '</ul>';
+        }
+
+        return $errors;
     }
 
 }

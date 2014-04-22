@@ -6,6 +6,7 @@
 
 namespace Magice\Bundle\AssetBundle\Twig\Field;
 
+use Magice\Utils\Arrays;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\Extension\Core\View\ChoiceView;
 use Magice\Bundle\AssetBundle\Twig\Form;
@@ -18,158 +19,105 @@ class Select implements FieldInterface
         return 'select';
     }
 
-    protected static function renderSelection(Form $form, &$choices, $items, $r, &$selected, $isYear)
+    public static function getField(Form $form, FormView $formView)
     {
-        /**
-         * @var ChoiceView $ch
-         */
-        foreach ($items as $ch) {
-
-            if ($isYear && $form->locale() == 'th') {
-                $ch->label = (int) $ch->label + 543;
-            }
-
-            $choices[] = sprintf(
-                '<div class="item" data-value="%s">%s</div>',
-                $ch->value,
-                $form->trans($ch->label, $r->translation_domain)
-            );
-
-            if ($ch->value == $r->value) {
-                $selected = sprintf('<div class="text">%s</div>', $form->trans($r->empty_value, $r->translation_domain));
-            }
-        }
-    }
-
-    public static function getField(Form $form, FormView $f)
-    {
-        $f->setRendered(true);
-
+        $formView->setRendered();
         $form->scriptDeclared['dropdown'] = "$('.ui.dropdown').dropdown();";
 
-        $r = (object) $f->vars;
+        $choices = self::choices($form, $formView);
+        $errors  = $form->getFieldErrors($formView);
+        $attrs   = Attributes::create($form, $formView);
 
-        $errors = '';
-        if ($r->submitted && !$form->fieldErrorMsgDisabled && !empty($r->errors)) {
-            $r->valid = false;
-            $errors   = '<ul class="ui red pointing above ui label">';
-            /**
-             * @var \Symfony\Component\Form\FormError $e
-             */
-            foreach ($r->errors as $e) {
-                $errors .= sprintf('<li>%s</li>', $form->trans($e->getMessage(), 'validators'));
-            }
-            $errors .= '</ul>';
-        }
+        $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
 
-        $error = $r->valid ? null : ' error';
-
-        $attr = $form->getAttrs($r->attr, array('class' => 'field'), array($error));
-
-        // TODO: support multiple
-        return $form->tpl(
-            '<div{attr}>',
-            '   <label{label_attr}>{label}{separator}</label>',
-            '   {select}',
-            '   {errors}',
+        $return = $form->tpl(
+            '<div {attr_cover}>',
+            '   <label {attr_label} for="{id}">{label}{separator}</label>',
+            '   <div {attr_field}>',
+            '       <select {attr_input}>{choices}</select>',
+            '       {options}',
+            '       {errors}',
+            '   </div>',
             '</div>',
             array(
-                'attr'       => $attr,
-                'label'      => $form->trans($r->label, $r->translation_domain),
-                'label_attr' => $form->getAttrs($r->label_attr),
+                'attr_cover' => Arrays::toAttrs($attrs->cover),
+                'attr_label' => Arrays::toAttrs($attrs->label),
+                'attr_field' => Arrays::toAttrs($attrs->field),
+                'attr_input' => Arrays::toAttrs($attrs->input),
+                'choices'    => $choices,
+                'id'         => $attrs->input['id'],
+                'label'      => $formView->vars['label'],
                 'separator'  => $form->labelSeparator,
-                'select'     => self::getSelect($form, $f, false),
+                'options'    => implode("\n", $attrs->option),
                 'errors'     => $errors
             )
         );
+
+        return $return;
     }
 
-    public static function getSelect(Form $form, FormView $f, $includeAttr = true, $isYear = false)
+    /**
+     * @param Form     $form
+     * @param FormView $formView
+     *
+     * @return string
+     */
+    private static function choices(Form $form, FormView $formView)
     {
-        $f->setRendered(true);
-
-        $form->scriptDeclared['dropdown'] = "$('.ui.dropdown').dropdown();";
-
-        $r = (object) $f->vars;
-
-        $required = true;
-        if ($r->required && empty($r->empty_value) && empty($r->empty_value_in_choices)) {
-            $required = false;
+        if ($formView->vars['required']
+            and empty($formView->vars['empty_value'])
+            and empty($formView->vars['empty_value_in_choices'])
+            and empty($formView->vars['multiple'])
+        ) {
+            $formView->vars['required'] = false;
         }
 
-        $disabled = $form->isAttr($r, 'disabled');
+        $choices = '';
 
-        $opts = '';
-        if (!empty($r->_opts)) {
-            $opts = (array) $r->_opts;
-            $opts = ' ' . implode(' ', $opts);
-        }
-
-        if ($includeAttr) {
-            $attr = $form->getAttrs(
-                $r->attr,
-                array(),
-                array('ui selection dropdown', $disabled, $opts)
+        if (!empty($formView->vars['empty_value'])) {
+            $choices .= sprintf(
+                '<option value=""%s>%s</option>',
+                $formView->vars['required'] && empty($formView->vars['value']) ? ' selected="selected"' : '',
+                $form->trans($formView->vars['empty_value'], $formView->vars['translation_domain'])
             );
-        } else {
-            $attr = 'class="ui selection dropdown' . $disabled . $opts . '"';
         }
 
-        $empty_value = '';
-        $empty_item  = '';
+        if (!empty($formView->vars['preferred_choices'])) {
+            $choices .= self::options($form, $formView, $formView->vars['preferred_choices']);
+        }
 
-        if (isset($r->empty_value)) {
-            $empty_item = sprintf('<div class="item" data-value="">%s</div>', $form->trans($r->empty_value, $r->translation_domain));
+        $choices .= self::options($form, $formView, $formView->vars['choices']);
 
-            if ($required && empty($r->value)) {
-                $empty_value = sprintf('<div class="text">%s</div>', $form->trans($r->empty_value, $r->translation_domain));
+        return $choices;
+    }
+
+    /**
+     * @param Form                                                     $form
+     * @param FormView                                                 $formView
+     * @param \Symfony\Component\Form\Extension\Core\View\ChoiceView[] $choices
+     *
+     * @return string
+     */
+    private static function options(Form $form, FormView $formView, array $choices)
+    {
+        $options = '';
+        foreach ($choices as $group => $ch) {
+            if ($ch instanceof \Traversable) {
+                $options .= sprintf(
+                    '<optgroup label="%s">%s</optgroup>',
+                    $form->trans($group, $formView->vars['translation_domain']),
+                    self::options($form, $formView, $ch)
+                );
+            } else {
+                $options .= sprintf(
+                    '<option value="%s"%s>%s</option>',
+                    $ch->value,
+                    $ch->value == $formView->vars['value'] ? ' selected="selected"' : '',
+                    $form->trans($ch->label, $formView->vars['translation_domain'])
+                );
             }
         }
 
-        $choices = array();
-        if (!empty($r->preferred_choices)) {
-            self::renderSelection($form, $choices, $r->preferred_choices, $r, $empty_value, $isYear);
-        }
-
-        if (!empty($r->choices)) {
-            self::renderSelection($form, $choices, $r->choices, $r, $empty_value, $isYear);
-        }
-
-        if (empty($empty_value) && !empty($choices)) {
-            $empty_value = str_replace('class="item"', 'class="text"', $choices[0]);
-        }
-
-        // sui mast have once select
-        if (empty($empty_value)) {
-            $empty_value = '<div class="text">...</div>';
-        }
-
-        $choices = implode("\n", $choices);
-
-        // TODO: support multiple
-        // TODO: change attr['label'] & attr['placeholder'] like TextField
-        return $form->tpl(
-            '   <div {attr}>',
-            '       {empty_value}',
-            '       <i class="dropdown icon"></i>',
-            '       {asterisk}',
-            '       <input name="{name}" id="{id}" type="hidden" value="{value}" ng-model="{ng_data_prefix}{id}" ng-init="{ng_data_prefix}{id}=\'{value}\'">',
-            '       <div class="menu">',
-            '           {empty_item}',
-            '           {choices}',
-            '       </div>',
-            '   </div>',
-            array(
-                'value'          => $r->value,
-                'id'             => $r->id,
-                'ng_data_prefix' => $form::$ngModelDataPrefix,
-                'name'           => $r->full_name,
-                'empty_value'    => $empty_value,
-                'empty_item'     => $empty_item,
-                'choices'        => $choices,
-                'attr'           => $attr,
-                'asterisk'       => $r->required ? '<div class="ui corner label"><i class="icon asterisk"></i></div>' : ''
-            )
-        );
+        return $options;
     }
 }

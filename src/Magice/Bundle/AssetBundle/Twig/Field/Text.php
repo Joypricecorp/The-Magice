@@ -22,23 +22,8 @@ class Text implements FieldInterface
     {
         $formView->setRendered();
 
-        $errors = '';
-        if ($formView->vars['submitted'] && !$form->fieldErrorMsgDisabled && !empty($formView->vars['errors'])) {
-            $formView->vars['valid'] = false;
-
-            $errors = '<ul class="ui red pointing above ui label">';
-
-            /**
-             * @var \Symfony\Component\Form\FormError $e
-             */
-            foreach ($formView->vars['errors'] as $e) {
-                $errors .= sprintf('<li>%s</li>', $form->trans($e->getMessage(), 'validators'));
-            }
-
-            $errors .= '</ul>';
-        }
-
-        $attr = Attributes::create($form, $formView);
+        $errors = $form->getFieldErrors($formView);
+        $attr   = Attributes::create($form, $formView);
 
         $type = $attr->input['type'] = static::getType();
 
@@ -48,7 +33,7 @@ class Text implements FieldInterface
 
         $return = $form->tpl(
             '<div {attr_cover}>',
-            '   <label {attr_label}>{label}{separator}</label>',
+            '   <label {attr_label} for="{id}">{label}{separator}</label>',
             '   <div {attr_field}>',
             '       <input {attr_input}>',
             '       {options}',
@@ -56,12 +41,13 @@ class Text implements FieldInterface
             '   </div>',
             '</div>',
             array(
-                'label'      => $formView->vars['label'],
-                'separator'  => $form->labelSeparator,
                 'attr_cover' => Arrays::toAttrs($attr->cover),
                 'attr_label' => Arrays::toAttrs($attr->label),
                 'attr_field' => Arrays::toAttrs($attr->field),
                 'attr_input' => Arrays::toAttrs($attr->input),
+                'id'         => $attr->input['id'],
+                'label'      => $formView->vars['label'],
+                'separator'  => $form->labelSeparator,
                 'options'    => implode("\n", $attr->option),
                 'errors'     => $errors
             )

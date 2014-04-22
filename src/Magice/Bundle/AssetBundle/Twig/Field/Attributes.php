@@ -52,7 +52,8 @@ class Attributes extends ArrayCollection
         $resolver->setDefaults(
             array(
                 'class'        => 'ui left labeled input',
-                'class_append' => null
+                'class_append' => null,
+                'attr'         => null
             )
         );
 
@@ -62,6 +63,12 @@ class Attributes extends ArrayCollection
             $options['class'] .= ' ' . $options['class_append'];
         }
 
+        if (!empty($options['attr'])) {
+            $options = array_merge($options, $options['attr']);
+            unset($options['attr']);
+        }
+
+        unset($options['attr']);
         unset($options['class_append']);
 
         return $options;
@@ -88,7 +95,8 @@ class Attributes extends ArrayCollection
         $resolver->setDefaults(
             array(
                 'class'        => 'field',
-                'class_append' => null
+                'class_append' => null,
+                'attr'         => null
             )
         );
 
@@ -98,6 +106,11 @@ class Attributes extends ArrayCollection
             $options['class'] .= ' ' . $options['class_append'];
         }
 
+        if (!empty($options['attr'])) {
+            $options = array_merge($options, $options['attr']);
+        }
+
+        unset($options['attr']);
         unset($options['class_append']);
 
         return $options;
@@ -122,12 +135,28 @@ class Attributes extends ArrayCollection
             $attrs['required'] = 'required';
         }
 
-        if ($formView->vars['read_only']) {
-            $attrs['readOnly'] = 'readOnly';
-        }
-
         if ($formView->vars['disabled']) {
             $attrs['disabled'] = 'disabled';
+        }
+
+        if ($formView->vars['read_only']) {
+            $attrs['readonly'] = 'readonly';
+        }
+
+        if (!empty($formView->vars['multiple'])) {
+            $attrs['multiple'] = 'multiple';
+        }
+
+        if ($formView->vars['max_length']) {
+            $attrs['maxlength'] = $formView->vars['max_length'];
+        }
+
+        if ($formView->vars['pattern']) {
+            $attrs['pattern'] = $formView->vars['pattern'];
+        }
+
+        if ($formView->vars['size']) {
+            $attrs['size'] = $formView->vars['size'];
         }
 
         if ($formView->vars['size']) {
@@ -156,6 +185,14 @@ class Attributes extends ArrayCollection
             }
         }
 
+        if ($form->uiFieldSize) {
+            if (isset($attrs['f:class_append'])) {
+                $attrs['f:class_append'] .= ' ' . $form->uiFieldSize;
+            } else {
+                $attrs['f:class_append'] = $form->uiFieldSize;
+            }
+        }
+
         #########################################
         # (O) options attributes
         #########################################
@@ -165,7 +202,7 @@ class Attributes extends ArrayCollection
         }
 
         // if field is required make asterisk
-        if ($formView->vars['required'] || $attrs['o:asterisk']) {
+        if ($formView->vars['required'] || !empty($attrs['o:asterisk'])) {
             $attrs['o:asterisk'] = '<div class="ui corner label"><i class="icon asterisk"></i></div>';
         }
 
