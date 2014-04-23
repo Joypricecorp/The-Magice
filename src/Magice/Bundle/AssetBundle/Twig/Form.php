@@ -202,7 +202,9 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
 
     protected function getField($type, FormView $form, $attr = array())
     {
-        if (!empty($attr)) {
+        if (empty($attr)) {
+            $form->vars['label'] = $this->trans($form->vars['label'], $form->vars['translation_domain']);
+        } else {
 
             // if config label from view you must translate it before with xxx|trans
             if (isset($attr['label'])) {

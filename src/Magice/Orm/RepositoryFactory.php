@@ -56,32 +56,5 @@ namespace Magice\Orm {
         {
             $this->container = $container;
         }
-
-        /**
-         * Factory for create reposotiry as service without add to doctrine default facotry
-         *
-         * @param EntityManager      $manager
-         * @param string             $entityClass
-         * @param ContainerInterface $container
-         *
-         * @return mixed
-         * @usage
-         * <service id="jp.repository.country" class="Magice\Orm\RepositoryFactory" factory-class="Magice\Orm\RepositoryFactory" factory-method="createDefault">
-         *      <argument type="service" id="doctrine.orm.default_entity_manager"/>
-         *      <argument>%jp.class.entity.geo.country%</argument>
-         *      <argument type="service" id="service_container [optional]"/>
-         * </service>
-         */
-        public static function createDefault(EntityManager $manager, $entityClass, ContainerInterface $container = null)
-        {
-            $metadata   = $manager->getClassMetadata($entityClass);
-            $repository = $metadata->customRepositoryClassName;
-
-            if ($repository === null) {
-                $repository = 'Magice\Orm\Repository';
-            }
-
-            return new $repository($manager, $metadata, $container);
-        }
     }
 }

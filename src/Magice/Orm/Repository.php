@@ -5,12 +5,13 @@ namespace Magice\Orm {
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\Mapping\ClassMetadata;
     use Doctrine\ORM\QueryBuilder;
+    use Doctrine\Common\Persistence\ObjectRepository;
     use Pagerfanta\Adapter\DoctrineORMAdapter;
     use Pagerfanta\Pagerfanta;
     use Symfony\Component\DependencyInjection\ContainerInterface;
     use Psr\Log\LoggerInterface;
 
-    class Repository extends EntityRepository
+    class Repository extends EntityRepository implements RepositoryInterface
     {
         /**
          * @var string
@@ -56,16 +57,6 @@ namespace Magice\Orm {
                 $this->_container = $cn;
                 $this->logger     = $cn->get($this->loggerChannel);
             }
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function createNew()
-        {
-            $className = $this->getClassName();
-
-            return new $className;
         }
 
         /**
@@ -234,6 +225,21 @@ namespace Magice\Orm {
         protected function getAlias()
         {
             return 'o';
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public static function create(EntityManager $manager, $entityClass, ContainerInterface $container = null)
+        {
+            $metadata   = $manager->getClassMetadata($entityClass);
+            $repository = $metadata->customRepositoryClassName;
+
+            if ($repository === null) {
+                $repository = static::CLASS;
+            }
+
+            return new $repository($manager, $metadata, $container);
         }
     }
 }
