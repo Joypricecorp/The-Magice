@@ -191,7 +191,12 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             }
 
             $attrs['ng-model'] = $name;
-            $attrs['ng-init']  = $name . "='" . $formView->vars['value'] . "'";
+
+            if (!empty($formView->vars['type']) && ($formView->vars['type'] === 'number' || $formView->vars['type'] === 'integer')) {
+                $attrs['ng-init'] = $name . "=" . $formView->vars['value'];
+            } else {
+                $attrs['ng-init'] = $name . "='" . $formView->vars['value'] . "'";
+            }
         }
     }
 
@@ -248,7 +253,7 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
             return $this->ui_form_button($form, $attr);
         }
 
-        if ($r->block_prefixes[1] == 'integer') {
+        if ((!empty($r->type) && $r->type === 'number') || $r->block_prefixes[1] == 'integer') {
             return $this->ui_form_number($form, $attr);
         }
 
