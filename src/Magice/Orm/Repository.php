@@ -5,9 +5,8 @@ namespace Magice\Orm {
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\Mapping\ClassMetadata;
     use Doctrine\ORM\QueryBuilder;
-    use Doctrine\Common\Persistence\ObjectRepository;
-    use Pagerfanta\Adapter\DoctrineORMAdapter;
-    use Pagerfanta\Pagerfanta;
+    use Magice\Paginator\Adapter\DoctrineORM;
+    use Magice\Paginator\Pager;
     use Symfony\Component\DependencyInjection\ContainerInterface;
     use Psr\Log\LoggerInterface;
 
@@ -144,11 +143,11 @@ namespace Magice\Orm {
         /**
          * @param QueryBuilder $queryBuilder
          *
-         * @return Pagerfanta
+         * @return Pager
          */
         public function getPaginator(QueryBuilder $queryBuilder)
         {
-            return new Pagerfanta(new DoctrineORMAdapter($queryBuilder));
+            return new Pager(new DoctrineORM($queryBuilder));
         }
 
         /**
