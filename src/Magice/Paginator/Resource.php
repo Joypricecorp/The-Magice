@@ -8,12 +8,17 @@ namespace Magice\Paginator {
         /**
          * @var array
          */
-        private $data;
+        public $data;
+
+        /**
+         * @var Paging
+         */
+        public $paging;
 
         /**
          * @var string
          */
-        private $key;
+        public $key;
 
         /**
          * @param Pager  $pager
@@ -28,41 +33,21 @@ namespace Magice\Paginator {
                 $collection->add($item);
             }
 
-            $this->key = $key;
+            $this->key    = $key;
+            $this->paging = new Paging(
+                $pager->getNbResults(),
+                $collection->count(),
+                $pager->getNbPages(),
+                $pager->getCurrentPage(),
+                $pager->getMaxPerPage()
+            );
 
             $this->data = array(
-                $key    => $collection,
-                'pagin' => array(
-                    /**
-                     * @key int total   - Total of this result
-                     * @key int count   - Total to display of this result
-                     * @key int pages   - Total pages
-                     * @key int page    - Current page
-                     * @key int size    - Page size
-                     */
-                    'total' => $pager->getNbResults(),
-                    'count' => $collection->count(),
-                    'pages' => $pager->getNbPages(),
-                    'page'  => $pager->getCurrentPage(),
-                    'size'  => $pager->getMaxPerPage(),
-                )
+                $key     => $collection,
+                // make ensure all serializer 3pt proper work
+                // make it to array
+                'paging' => (array) $this->paging
             );
-        }
-
-        /**
-         * @return string
-         */
-        public function getKey()
-        {
-            return $this->key;
-        }
-
-        /**
-         * @return array
-         */
-        public function getData()
-        {
-            return $this->data;
         }
     }
 }
