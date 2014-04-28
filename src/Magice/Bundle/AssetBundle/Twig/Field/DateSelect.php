@@ -40,6 +40,8 @@ class DateSelect implements FieldInterface
         $month = $formView->children['month'];
         $year  = $formView->children['year'];
 
+        $year->vars['is_year'] = true;
+
         $day->vars['attr'] = $month->vars['attr'] = $year->vars['attr'] = $formView->vars['attr'];
         return $form->tpl(
             '<div {attr_cover}>',

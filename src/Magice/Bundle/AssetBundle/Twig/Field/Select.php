@@ -114,7 +114,7 @@ class Select implements FieldInterface
                     '<option value="%s"%s>%s</option>',
                     $ch->value,
                     $ch->value == $formView->vars['value'] ? ' selected="selected"' : '',
-                    $form->trans($ch->label, $formView->vars['translation_domain'])
+                    $form->trans($ch->label, $formView->vars['translation_domain'], isset($formView->vars['is_year']))
                 );
             }
         }

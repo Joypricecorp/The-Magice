@@ -88,9 +88,13 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         );
     }
 
-    public function trans($msg, $domain)
+    public function trans($msg, $domain, $isYear = false)
     {
-        return $this->container->get('translator')->trans($msg, array(), $domain);
+        if ($isYear && strtolower($this->locale()) == 'th') {
+            return $msg + 543;
+        } else {
+            return $this->container->get('translator')->trans($msg, array(), $domain);
+        }
     }
 
     public function locale()
