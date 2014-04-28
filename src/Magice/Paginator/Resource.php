@@ -2,6 +2,7 @@
 namespace Magice\Paginator {
 
     use Doctrine\Common\Collections\ArrayCollection;
+    use Symfony\Component\HttpFoundation\Response;
 
     class Resource
     {
@@ -47,6 +48,22 @@ namespace Magice\Paginator {
                 // make ensure all serializer 3pt proper work
                 // make it to array
                 'paging' => (array) $this->paging
+            );
+        }
+
+        /**
+         * @param Response $response
+         */
+        public function setContentRangHeader(Response $response)
+        {
+            $size  = $this->paging->size;
+            $count = $this->paging->count;
+            $page  = $this->paging->page;
+            $total = $this->paging->total;
+
+            $response->headers->set(
+                'Content-Range',
+                sprintf('%s-%s/%s', (($page - 1) * $size), ($page * $count) - 1, $total)
             );
         }
     }

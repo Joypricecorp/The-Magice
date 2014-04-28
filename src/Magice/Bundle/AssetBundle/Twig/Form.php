@@ -181,8 +181,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         if ($this->useNgModel) {
             $name = $formView->vars['name'];
 
-            // password fields
-            if ($formView->vars['block_prefixes'][2] == 'password') {
+            // repeated fields password
+            if (!empty($formView->vars['repeated_password'])) {
                 $name = $formView->parent->vars['name'] . '.' . $name;
             }
 
@@ -344,6 +344,10 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
         $first  = $form->children['first'];
         $second = $form->children['second'];
 
+        if (!isset($attr['autocomplete'])) {
+            $attr['autocomplete'] = 'off';
+        }
+
         $attr1 = $attr;
         $attr2 = $attr;
 
@@ -354,6 +358,9 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
 
         $first->vars['valid']  = $form->vars['valid'];
         $second->vars['valid'] = $form->vars['valid'];
+
+        $first->vars['repeated_password']  = true;
+        $second->vars['repeated_password'] = true;
 
         return
             $this->ui_form_password($first, $attr1)
