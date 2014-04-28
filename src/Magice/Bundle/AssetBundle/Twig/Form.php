@@ -192,8 +192,18 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
 
             $attrs['ng-model'] = $name;
 
-            if (!empty($formView->vars['type']) && ($formView->vars['type'] === 'number' || $formView->vars['type'] === 'integer')) {
-                $attrs['ng-init'] = $name . "=" . $formView->vars['value'];
+            if (!empty($formView->vars['type']) && (
+                    $formView->vars['type'] === 'birthday' ||
+                    $formView->vars['type'] === 'number' ||
+                    $formView->vars['type'] === 'integer'
+                )
+            ) {
+                if ($formView->vars['type'] === 'birthday') {
+                    unset($attrs['ng-model']);
+                    unset($attrs['ng-init']);
+                } else {
+                    $attrs['ng-init'] = $name . "=" . $formView->vars['value'];
+                }
             } else {
                 $attrs['ng-init'] = $name . "='" . $formView->vars['value'] . "'";
             }
@@ -231,7 +241,8 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
     {
         $r = (object) $form->vars;
 
-        if (isset($r->date_pattern)) {
+        if ($r->block_prefixes[2] == 'birthday') {
+            $form->vars['type'] = 'birthday';
             return $this->ui_form_date_select($form, $attr);
         }
 

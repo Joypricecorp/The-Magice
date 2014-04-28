@@ -22,13 +22,14 @@ class Select implements FieldInterface
     public static function getField(Form $form, FormView $formView)
     {
         $formView->setRendered();
-        $form->scriptDeclared['dropdown'] = "$('.ui.dropdown').dropdown();";
 
         $choices = self::choices($form, $formView);
         $errors  = $form->getFieldErrors($formView);
         $attrs   = Attributes::create($form, $formView);
 
-        $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
+        if ($form->useNgModel) {
+            $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
+        }
 
         $return = $form->tpl(
             '<div {attr_cover}>',

@@ -6,6 +6,7 @@
 
 namespace Magice\Bundle\AssetBundle\Twig\Field;
 
+use Magice\Utils\Arrays;
 use Symfony\Component\Form\FormView;
 use Magice\Bundle\AssetBundle\Twig\Form;
 use Magice\Bundle\AssetBundle\Twig\FieldInterface;
@@ -17,55 +18,48 @@ class DateSelect implements FieldInterface
         return 'dateselect';
     }
 
-    public static function getField(Form $form, FormView $f)
+    public static function getField(Form $form, FormView $formView)
     {
-        $f->setRendered(true);
+        $formView->setRendered();
 
-        $r = (object) $f->vars;
+        $errors = $form->getFieldErrors($formView);
+        $attrs  = Attributes::create($form, $formView);
 
-        $errors = '';
-        if ($r->submitted && !$form->fieldErrorMsgDisabled && !empty($r->errors)) {
-            $r->valid = false;
-            $errors   = '<ul class="ui red pointing above ui label">';
-            /**
-             * @var \Symfony\Component\Form\FormError $e
-             */
-            foreach ($r->errors as $e) {
-                $errors .= sprintf('<li>%s</li>', $form->trans($e->getMessage(), 'validators'));
-            }
-            $errors .= '</ul>';
+        $attrs->cover['class'] .= ' date-select';
+
+        if ($form->useNgModel) {
+            $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
         }
-
-        $error = $r->valid ? null : ' error';
-
-        $attr = $form->getAttrs($r->attr, array('class' => 'field'), array($error));
 
         /**
          * @var FormView $day
          * @var FormView $month
          * @var FormView $year
          */
-        $day   = $f->children['day'];
-        $month = $f->children['month'];
-        $year  = $f->children['year'];
+        $day   = $formView->children['day'];
+        $month = $formView->children['month'];
+        $year  = $formView->children['year'];
 
+        $day->vars['attr'] = $month->vars['attr'] = $year->vars['attr'] = $formView->vars['attr'];
         return $form->tpl(
-            '<div{attr}>',
-            '   <label{label_attr}>{label}{separator}</label>',
-            '   {day}',
-            '   {month}',
-            '   {year}',
+            '<div {attr_cover}>',
+            '   <label {attr_label}>{label}{separator}</label>',
+            '   <div class="three fields">',
+            '       {day}',
+            '       {month}',
+            '       {year}',
+            '   </div>',
             '   {errors}',
             '</div>',
             array(
-                'label'      => $form->trans($r->label, $r->translation_domain),
-                'label_attr' => $form->getAttrs($r->label_attr),
+                'attr_cover' => Arrays::toAttrs($attrs->cover),
+                'attr_label' => Arrays::toAttrs($attrs->label),
                 'separator'  => $form->labelSeparator,
-                'attr'       => $attr,
-                'day'        => Select::getSelect($form, $day),
-                'month'      => Select::getSelect($form, $month),
-                'year'       => Select::getSelect($form, $year, true, true),
-                'errors'     => $errors
+                'label'      => $formView->vars['label'],
+                'errors'     => $errors,
+                'day'        => Select::getField($form, $day),
+                'month'      => Select::getField($form, $month),
+                'year'       => Select::getField($form, $year),
             )
         );
     }
