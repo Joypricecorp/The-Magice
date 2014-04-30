@@ -190,6 +190,10 @@ class Form extends \Twig_Extension implements ContainerAwareInterface
                 $name = $formView->parent->vars['name'] . '.' . $name;
             }
 
+            if (!empty($formView->vars['ng_name'])) {
+                $name = $formView->vars['ng_name'];
+            }
+
             if ($this->ngModelDataPrefix) {
                 $name = $this->ngModelDataPrefix . '.' . $name;
             }

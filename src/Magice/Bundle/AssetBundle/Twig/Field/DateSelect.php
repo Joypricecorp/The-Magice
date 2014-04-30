@@ -27,10 +27,6 @@ class DateSelect implements FieldInterface
 
         $attrs->cover['class'] .= ' date-select';
 
-        if ($form->useNgModel) {
-            $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
-        }
-
         /**
          * @var FormView $day
          * @var FormView $month
@@ -40,9 +36,20 @@ class DateSelect implements FieldInterface
         $month = $formView->children['month'];
         $year  = $formView->children['year'];
 
-        $year->vars['is_year'] = true;
+        // use for ng-model
+        $day->vars['ng_name']   = $formView->vars['name'] . '.' . $day->vars['name'];
+        $month->vars['ng_name'] = $formView->vars['name'] . '.' . $month->vars['name'];
+        $year->vars['ng_name']  = $formView->vars['name'] . '.' . $year->vars['name'];
 
-        $day->vars['attr'] = $month->vars['attr'] = $year->vars['attr'] = $formView->vars['attr'];
+        // use for ng-change
+        $day->vars['custom_name']   = $formView->vars['name'] . '_' . $day->vars['name'];
+        $month->vars['custom_name'] = $formView->vars['name'] . '_' . $month->vars['name'];
+        $year->vars['custom_name']  = $formView->vars['name'] . '_' . $year->vars['name'];
+
+        $year->vars['is_year'] = true;
+        $day->vars['attr']     = $month->vars['attr'] = $year->vars['attr'] = $formView->vars['attr'];
+
+
         return $form->tpl(
             '<div {attr_cover}>',
             '   <label {attr_label}>{label}{separator}</label>',

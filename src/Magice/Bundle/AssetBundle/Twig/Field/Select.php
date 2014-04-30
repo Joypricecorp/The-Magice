@@ -28,7 +28,7 @@ class Select implements FieldInterface
         $attrs   = Attributes::create($form, $formView);
 
         if ($form->useNgModel) {
-            $attrs->input['ng-change'] = $formView->vars['name'] . '_change()';
+            $attrs->input['ng-change'] = (!empty($formView->vars['custom_name']) ? $formView->vars['custom_name'] : $formView->vars['name']) . '_change()';
         }
 
         $return = $form->tpl(
