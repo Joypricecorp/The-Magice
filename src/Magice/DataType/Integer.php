@@ -9,7 +9,7 @@
  * @since       1.0
  */
 
-namespace Magice\TypeHinting {
+namespace Magice\DataType {
 
     class Integer
     {
